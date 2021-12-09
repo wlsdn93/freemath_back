@@ -1,7 +1,5 @@
 package com.math.weakness.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -10,11 +8,13 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @Embeddable
-public class UserProblemId implements Serializable {
-    @Column
-    private Long userId;
+public class ProblemTagId implements Serializable {
+
     @Column
     private Long problemId;
+
+    @Column
+    private Long tagId;
 
     @Override
     public int hashCode() {

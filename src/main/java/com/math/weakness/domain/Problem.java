@@ -17,8 +17,11 @@ public class Problem {
     @Column(name = "PROBLEM_ID")
     private Long problemId;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
     private List<UserProblem> userProblems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
+    private List<ProblemTag> problemTags = new ArrayList<>();
 
     @Column(columnDefinition="mediumblob", name = "IMAGE")
     private Byte[] image;

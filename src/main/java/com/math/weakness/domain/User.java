@@ -14,7 +14,7 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserProblem> userProblems = new ArrayList<>();
 
     @Column(name = "username")
