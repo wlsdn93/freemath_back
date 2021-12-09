@@ -19,7 +19,9 @@ public class Tag {
     @Column(name = "tag_name")
     private String tagName;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tag",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<ProblemTag> problemTags = new ArrayList<>();
 
 }

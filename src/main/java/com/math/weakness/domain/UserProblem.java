@@ -13,12 +13,12 @@ public class UserProblem {
     @EmbeddedId
     private UserProblemId userProblemId = new UserProblemId();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("problemId")
     @JoinColumn(name = "PROBLEM_ID")
     private Problem problem;
