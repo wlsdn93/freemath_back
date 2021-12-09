@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar scroll</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        과목
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="#">수학1</a></li>
+                        <li><a class="dropdown-item" href="#">수학2</a></li>
+                        <li><a class="dropdown-item" href="#">미적분</a></li>
+                        <li><a class="dropdown-item" href="#">확률과 통계</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">기하와 벡터</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        상태
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="#">안푼 문제</a></li>
+                        <li><a class="dropdown-item" href="#">틀린 문제</a></li>
+                        <li><a class="dropdown-item" href="#">맞은 문제</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        난이도
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="#">2점</a></li>
+                        <li><a class="dropdown-item" href="#">3점</a></li>
+                        <li><a class="dropdown-item" href="#">4점</a></li>
+                        <li><a class="dropdown-item" href="#">Killer</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">문제번호</th>
+        <th scope="col">상태</th>
+        <th scope="col">문제</th>
+        <th scope="col">난이도</th>
+    </tr>
+    </thead>
+    <tbody>
+<!--    <tr th:each="item : ${items}">-->
+<!--        <td><a href="item.html" th:href="@{/form/items/{itemId}(itemId=${item.id})}" th:text="${item.id}">회원id</a></td>-->
+<!--        <td><a href="item.html" th:href="@{|/form/items/${item.id}|}" th:text="${item.itemName}">상품명</a></td>-->
+<!--        <td th:text="${item.price}">10000</td>-->
+<!--        <td th:text="${item.quantity}">10</td>-->
+    </tr>
+    </tbody>
+</table>
+<hr class="my-4">
+</div> <!-- /container -->
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
