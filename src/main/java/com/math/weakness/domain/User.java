@@ -1,31 +1,25 @@
 package com.math.weakness.domain;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @Entity
-public class Problem {
-
+public class User {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "PROBLEM_ID")
-    private Long problemId;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "user")
     private List<UserProblem> userProblems = new ArrayList<>();
 
-    @Column(name = "IMAGE")
-    private Byte[] image;
+    @Column(name = "username")
+    private String name;
 
-    @Column(name = "TITLE")
-    private String title;
-
-    @Column(name = "DIFFICULTY")
-    private Integer difficulty;
+    @Column(name = "email")
+    private String email;
 }
