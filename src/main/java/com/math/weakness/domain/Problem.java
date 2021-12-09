@@ -20,7 +20,7 @@ public class Problem {
     @OneToMany(mappedBy = "problem")
     private List<UserProblem> userProblems = new ArrayList<>();
 
-    @Column(name = "IMAGE")
+    @Column(columnDefinition="mediumblob", name = "IMAGE")
     private Byte[] image;
 
     @Column(name = "TITLE")
