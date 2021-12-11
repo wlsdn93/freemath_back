@@ -41,12 +41,10 @@ public class Problem {
     private LocalDateTime modifiedDate;
 
     @OneToMany(mappedBy = "problem",
-            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
     @OneToMany(mappedBy = "problem",
-            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<ProblemTag> problemTags = new ArrayList<>();
 
