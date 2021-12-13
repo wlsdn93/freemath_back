@@ -25,13 +25,16 @@ public class Problem {
     @Column(name = "ANSWER")
     private String answer;
 
-    @Column(columnDefinition="mediumblob", name = "IMAGE")
-    private Byte[] image;
+    @Column(name = "PROBLEM_IMAGE_NAME")
+    private String problemImageName;
+
+    @Column(name = "SOLUTION_IMAGE_NAME")
+    private String solutionImageName;
 
     @Column(name = "DIFFICULTY")
     private Integer difficulty;
 
-    @Column(name = "AUTHOR")
+    @Column(name = "AUTHOR", nullable = true)
     private String author;
 
     @Column(name = "CREATED_DATE")
@@ -41,18 +44,22 @@ public class Problem {
     private LocalDateTime modifiedDate;
 
     @OneToMany(mappedBy = "problem",
+            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
     @OneToMany(mappedBy = "problem",
+            cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<ProblemTag> problemTags = new ArrayList<>();
 
     @Builder
-    public Problem(String title, String answer, Byte[] image, Integer difficulty, String author) {
+    public Problem(String title, String answer, String problemImageName,
+                   String solutionImageName, Integer difficulty, String author) {
         this.title = title;
         this.answer = answer;
-        this.image = image;
+        this.problemImageName = problemImageName;
+        this.solutionImageName = solutionImageName;
         this.difficulty = difficulty;
         this.author = author;
     }

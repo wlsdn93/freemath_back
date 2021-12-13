@@ -5,14 +5,13 @@ import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.repository.SpringDataProblemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+@Transactional
 @Service
 public class ProblemService{
 
@@ -26,7 +25,6 @@ public class ProblemService{
     /**
      * 추가
      */
-    @Transactional
     public Long addProblem(ProblemRequestDto params) {
         Problem entity = problemRepository.save(params.toEntity());
         return entity.getProblemId();
@@ -35,12 +33,10 @@ public class ProblemService{
     /**
      * 삭제
      */
-    @Transactional
     public void deleteProblem(ProblemRequestDto params) {
         problemRepository.delete(params.toEntity());
     }
 
-    @Transactional
     public void deleteProblemById(Long id) {
         problemRepository.deleteById(id);
     }
@@ -54,13 +50,14 @@ public class ProblemService{
     /**
      * 문제 리스트 조회
      */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<ProblemResponseDto> findAll() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "PROBLEM_ID");
-        List<Problem> problems = problemRepository.findAll(sort);
 
+        List<Problem> problems = problemRepository.findAll();
         List<ProblemResponseDto> problemList = new ArrayList<>();
-        for (ProblemResponseDto entity : problemList) {
-            problemList.add(entity);
+        for (Problem entity : problems) {
+            ProblemResponseDto responseDto = new ProblemResponseDto(entity);
+            problemList.add(responseDto);
         }
 
         return problemList;
@@ -70,7 +67,6 @@ public class ProblemService{
     /**
      * 수정
      */
-    @Transactional
     public Long problemUpdate(Long id, ProblemRequestDto params) {
         Problem entity = problemRepository.findById(id).get();
         entity.update(params.getTitle(), params.getAnswer(), params.getAuthor());

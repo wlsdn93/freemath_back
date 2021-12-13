@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>상품 등록 폼</h2>
+    </div>
+    <h4 class="mb-3">상품 입력</h4>
+    <form th:action method="post" enctype="multipart/form-data">
+        <ul>
+            <li> 문제명 <input type="text" name="title"></li>
+            <li> 정답  <input type="text" name="answer"></li>
+            <li> 난이도  <input type="text" name="difficulty"></li>
+            <li> 문제 <input type="file" name="problemImageFile"></li>
+            <li> 해설 <input type="file" name="solutionImageFile"></li>
+        </ul>
+        <input type="submit"/>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

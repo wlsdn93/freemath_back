@@ -8,7 +8,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar scroll</a>
+        <a class="navbar-brand" href="#"> 기출 저장소 </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,7 +45,6 @@
                         <li><a class="dropdown-item" href="#">2점</a></li>
                         <li><a class="dropdown-item" href="#">3점</a></li>
                         <li><a class="dropdown-item" href="#">4점</a></li>
-                        <li><a class="dropdown-item" href="#">Killer</a></li>
                     </ul>
                 </li>
             </ul>
@@ -56,17 +55,15 @@
     <thead>
     <tr>
         <th scope="col">문제번호</th>
-        <th scope="col">상태</th>
-        <th scope="col">문제</th>
+        <th scope="col">문제명</th>
         <th scope="col">난이도</th>
     </tr>
     </thead>
     <tbody>
-<!--    <tr th:each="item : ${items}">-->
-<!--        <td><a href="item.html" th:href="@{/form/items/{itemId}(itemId=${item.id})}" th:text="${item.id}">회원id</a></td>-->
-<!--        <td><a href="item.html" th:href="@{|/form/items/${item.id}|}" th:text="${item.itemName}">상품명</a></td>-->
-<!--        <td th:text="${item.price}">10000</td>-->
-<!--        <td th:text="${item.quantity}">10</td>-->
+    <tr th:each="requestDto : ${problems}">
+        <td th:text="${requestDto.getProblemId()}">문제번호</td>
+        <td th:text="${requestDto.getTitle()}">문제명</td>
+        <td th:text="${requestDto.getDifficulty()}">난이도</td>
     </tr>
     </tbody>
 </table>

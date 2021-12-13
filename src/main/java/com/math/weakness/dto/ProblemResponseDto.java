@@ -11,7 +11,8 @@ public class ProblemResponseDto {
     private Long problemId;
     private String title;
     private String answer;
-    private Byte[] image;
+    private String problemImageName;
+    private String solutionImageName;
     private Integer difficulty;
     private String author;
     private LocalDateTime createdDate;
@@ -21,7 +22,8 @@ public class ProblemResponseDto {
         this.problemId = entity.getProblemId();
         this.title = entity.getTitle();
         this.answer = entity.getAnswer();
-        this.image = entity.getImage();
+        this.problemImageName = entity.getProblemImageName();
+        this.solutionImageName = entity.getSolutionImageName();
         this.difficulty = entity.getDifficulty();
         this.author = entity.getAuthor();
         this.createdDate = entity.getCreatedDate();
