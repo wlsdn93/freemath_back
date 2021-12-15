@@ -74,7 +74,7 @@ class ProblemServiceTest {
         //When
         Long problemId1 = problemService.addProblem(problemRequestDto1);
         Long problemId2 = problemService.addProblem(problemRequestDto2);
-//        problemService.deleteProblemById(problemId1);
+        problemService.deleteProblemById(problemId1);
 
         //Then
         assertThat(problemRepository.findAll().size()).isEqualTo(1);

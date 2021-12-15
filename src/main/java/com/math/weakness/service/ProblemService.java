@@ -5,11 +5,13 @@ import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.repository.SpringDataProblemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -33,18 +35,18 @@ public class ProblemService{
     /**
      * 삭제
      */
-    public void deleteProblem(ProblemRequestDto params) {
-        problemRepository.delete(params.toEntity());
-    }
-
     public void deleteProblemById(Long id) {
         problemRepository.deleteById(id);
     }
 
     /**
-     * 검색
+     * 문제 조회
      */
-
+    public ProblemResponseDto findById(Long id) {
+        Problem foundProblem = problemRepository.findById(id).get();
+        ProblemResponseDto problemResponseDto = new ProblemResponseDto(foundProblem);
+        return problemResponseDto;
+    }
 
 
     /**
@@ -52,8 +54,8 @@ public class ProblemService{
      */
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<ProblemResponseDto> findAll() {
-
-        List<Problem> problems = problemRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "problemId");
+        List<Problem> problems = problemRepository.findAll(sort);
         List<ProblemResponseDto> problemList = new ArrayList<>();
         for (Problem entity : problems) {
             ProblemResponseDto responseDto = new ProblemResponseDto(entity);
