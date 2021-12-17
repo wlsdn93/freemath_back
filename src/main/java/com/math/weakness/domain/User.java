@@ -1,5 +1,6 @@
 package com.math.weakness.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +20,29 @@ public class User {
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
-    @Column(name = "username")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @Builder
+    public User(String name, String email, Role role) {
+        this.name = name;
+        this.email = email;
+        this.role = role;
+    }
+
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
 }
