@@ -4,9 +4,11 @@ import com.math.weakness.domain.Role;
 import com.math.weakness.domain.User;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+@Slf4j
 @Getter
 public class OAuthAttributes {
     private Map<String, Object> attributes;
@@ -29,9 +31,12 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
+        Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get("profile");
+        log.info("ofKakao operated");
         return OAuthAttributes.builder()
-                .name((String)attributes.get("name"))
-                .email((String)attributes.get("email"))
+                .name((String)kakaoProfile.get("nickname"))
+                .email((String)kakaoAccount.get("email"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();

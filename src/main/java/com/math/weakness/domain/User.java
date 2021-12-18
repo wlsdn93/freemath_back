@@ -20,10 +20,10 @@ public class User {
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Enumerated(EnumType.STRING)

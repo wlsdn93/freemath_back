@@ -5,6 +5,7 @@ import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.User;
 import com.math.weakness.repository.SpringDataUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -38,7 +40,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuthAttributes attributes = OAuthAttributes.of(registrationId,
                                                         userNameAttributeName,
                                                         oAuth2User.getAttributes());
-
+        log.info("loadUser operated");
         User user = saveOrUpdate(attributes);
         httpSession.setAttribute("user", new SessionUser(user));
         return new DefaultOAuth2User(
@@ -51,6 +53,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName()))
                 .orElse(attributes.toEntity());
+        log.info("saveOrUpdate operated {}", user);
         return userRepository.save(user);
     }
 }
