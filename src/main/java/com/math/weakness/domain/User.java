@@ -30,11 +30,16 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Platform platform;
+
     @Builder
-    public User(String name, String email, Role role) {
+    public User(String name, String email, Role role, Platform platform) {
         this.name = name;
         this.email = email;
         this.role = role;
+        this.platform = platform;
     }
 
     public User update(String name) {
