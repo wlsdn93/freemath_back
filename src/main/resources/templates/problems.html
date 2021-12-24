@@ -69,7 +69,7 @@
 </table>
 <hr class="my-4">
 </div> <!-- /container -->
-<div th:if="${!problems.isEmpty()}" style="align-content: center">
+<div th:if="${!problems.isEmpty()}" >
     <nav style="text-align: center"
             th:with="
                 pageNumber = ${problems.number},
@@ -79,7 +79,7 @@
                 tempEndPage = ${startPage + pageSize - 1},
                 endPage = (${tempEndPage > totalPages ? totalPages : tempEndPage})"
             aria-label="Page navigation">
-    <ul class="pagination ">
+        <ul class="pagination justify-content-center">
 
         <li th:classappend="${pageNumber + 1 <= pageSize + 1} ? 'disabled'" class="page-item">
             <a class="page-link" th:href="@{/problems(page=1)}">
@@ -88,8 +88,8 @@
         </li>
 
         <li th:classappend="${problems.first} ? 'disabled'" class="page-item">
-            <a th:href="${problems.first} ? '#' :@{/problems(page=${pageNumber})}">
-                <span>&lt;</span>
+            <a class="page-link" th:href="${problems.first} ? '#' :@{/problems(page=${pageNumber})}">
+                &lt;
             </a>
         </li>
 
@@ -98,8 +98,8 @@
         </li>
 
         <li th:class="${problems.last} ? 'disabled'">
-            <a th:href="${problems.last} ? '#' : @{/problems(page=${pageNumber + 2})}">
-                <span>&gt;</span>
+            <a class="page-link" th:href="${problems.last} ? '#' : @{/problems(page=${pageNumber + 2})}">
+                &gt;
             </a>
         </li>
 
