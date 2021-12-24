@@ -5,6 +5,9 @@ import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +32,8 @@ public class ProblemController {
     }
 
     @GetMapping
-    public String problems(Model model) {
-        List<ProblemResponseDto> problems = problemService.findAll();
+    public String problems(@PageableDefault Pageable pageable, Model model) {
+        Page<ProblemResponseDto> problems = problemService.findAllProblem(pageable);
         model.addAttribute("problems", problems);
         return "problems";
     }
@@ -50,7 +53,7 @@ public class ProblemController {
     }
 
     @PostMapping("/add")
-    public String items(@RequestParam MultipartFile problemImageFile,
+    public String problems(@RequestParam MultipartFile problemImageFile,
                         @RequestParam MultipartFile solutionImageFile,
                         @RequestParam String title,
                         @RequestParam String answer,
