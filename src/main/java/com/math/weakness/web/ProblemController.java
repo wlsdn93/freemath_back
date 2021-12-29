@@ -1,8 +1,11 @@
 package com.math.weakness.web;
 
+import com.math.weakness.config.auth.dto.SessionUser;
+import com.math.weakness.domain.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.service.ProblemService;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -15,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/problems")
@@ -32,9 +34,14 @@ public class ProblemController {
     }
 
     @GetMapping
-    public String problems(@PageableDefault Pageable pageable, Model model) {
-        Page<ProblemResponseDto> problems = problemService.findAllProblem(pageable);
+    public String problems(@RequestParam(required = false) Boolean status,
+                           @RequestParam(required = false) Integer difficulty,
+                           @PageableDefault Pageable pageable,
+                           Model model) {
+
+        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable, 1L);
         model.addAttribute("problems", problems);
+
         return "problems";
     }
 

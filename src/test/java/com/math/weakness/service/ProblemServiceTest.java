@@ -2,22 +2,17 @@ package com.math.weakness.service;
 
 import com.math.weakness.domain.Problem;
 import com.math.weakness.dto.ProblemRequestDto;
-import com.math.weakness.dto.ProblemResponseDto;
-import com.math.weakness.repository.SpringDataProblemRepository;
-import org.assertj.core.api.Assertions;
+import com.math.weakness.repository.ProblemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -27,7 +22,7 @@ class ProblemServiceTest {
     ProblemService problemService;
 
     @Autowired
-    SpringDataProblemRepository problemRepository;
+    ProblemRepository problemRepository;
 
     @BeforeEach
     public void BeforeEach() {
@@ -79,6 +74,23 @@ class ProblemServiceTest {
         //Then
         assertThat(problemRepository.findAll().size()).isEqualTo(1);
 
+    }
+    @Test
+    @Rollback(value = false)
+    void testSampleAdd() {
+        for( int i = 0 ; i < 1000 ; i++) {
+            //Given
+            ProblemRequestDto problemRequestDto1 = ProblemRequestDto.builder()
+                    .title("title1")
+                    .answer("answer1")
+                    .author("author1")
+                    .difficulty(4)
+                    .build();
+
+            //When
+            Long problemId1 = problemService.addProblem(problemRequestDto1);
+
+        }
     }
 
 }

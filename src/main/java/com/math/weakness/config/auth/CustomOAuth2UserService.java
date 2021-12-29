@@ -3,7 +3,7 @@ package com.math.weakness.config.auth;
 import com.math.weakness.config.auth.dto.OAuthAttributes;
 import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.User;
-import com.math.weakness.repository.SpringDataUserRepository;
+import com.math.weakness.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +23,7 @@ import java.util.Collections;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final SpringDataUserRepository userRepository;
+    private final UserRepository userRepository;
     private final HttpSession httpSession;
 
     @Override
