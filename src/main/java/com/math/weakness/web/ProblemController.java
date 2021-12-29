@@ -5,7 +5,7 @@ import com.math.weakness.domain.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.service.ProblemService;
-import com.querydsl.core.Tuple;
+import com.math.weakness.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 
@@ -24,13 +25,17 @@ import java.io.IOException;
 public class ProblemController {
 
     private final ProblemService problemService;
+    private final UserService userService;
+    private final HttpSession httpSession;
 
     @Value("${file.dir}")
     private String fileDir;
 
     @Autowired
-    public ProblemController(ProblemService problemService) {
+    public ProblemController(ProblemService problemService, UserService userService, HttpSession httpSession) {
         this.problemService = problemService;
+        this.userService = userService;
+        this.httpSession = httpSession;
     }
 
     @GetMapping
@@ -38,8 +43,9 @@ public class ProblemController {
                            @RequestParam(required = false) Integer difficulty,
                            @PageableDefault Pageable pageable,
                            Model model) {
-
-        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable, 1L);
+        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        Long id = userService.findByEmail(user.getEmail());
+        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable, id);
         model.addAttribute("problems", problems);
 
         return "problems";
