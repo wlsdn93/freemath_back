@@ -80,7 +80,7 @@ public class ProblemService{
         if ( httpSession.getAttribute("user") != null ) {
             SessionUser user = (SessionUser) httpSession.getAttribute("user");
             Long id = userService.findByEmail(user.getEmail());
-            Page<ProblemShow> problemList = problemRepository.SearchProblemsWithStatus(id, pageable, difficulty, status);
+            Page<ProblemShow> problemList = problemRepository.findByDifficultyAndStatus(id, pageable, difficulty, status);
             return problemList;
         }
         return showAllProblems(pageable);
