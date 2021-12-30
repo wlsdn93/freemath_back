@@ -2,6 +2,7 @@ package com.math.weakness.repository;
 
 import com.math.weakness.dto.ProblemShow;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,10 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository{
     }
 
     @Override
-    public Page<ProblemShow> SearchProblemsWithStatus(Long id, Pageable pageable) {
+    public Page<ProblemShow> SearchProblemsWithStatus(Long id,
+                                                      Pageable pageable,
+                                                      Integer difficulty,
+                                                      Boolean status) {
 
         if( pageable.getOffset() < 10 ) {
             offset = 10L;
@@ -47,6 +51,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository{
                 .leftJoin(userProblem)
                 .on(problem.problemId.eq(userProblem.problem.problemId)
                         .and(userProblem.user.userId.eq(id)))
+                .where(difficultyCond(difficulty), statusCond(status))
                 .offset(offset-10)
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc())
@@ -60,10 +65,18 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository{
                         userProblem.status))
                 .from(problem)
                 .leftJoin(userProblem)
-                .on(problem.problemId.eq(userProblem.problem.problemId)
-                        .and(userProblem.user.userId.eq(id)))
+                .on(problem.problemId.eq(userProblem.problem.problemId))
                 .orderBy(problem.problemId.desc());
 
          return PageableExecutionUtils.getPage(queryResult, pageable, () -> count.fetchCount());
     }
+
+    private BooleanExpression difficultyCond(Integer difficulty) {
+        return (difficulty != null) ? problem.difficulty.eq(difficulty) : null;
+    }
+
+    private BooleanExpression statusCond(Boolean status) {
+        return (status != null) ? userProblem.status.eq(status) : null;
+    }
+
 }

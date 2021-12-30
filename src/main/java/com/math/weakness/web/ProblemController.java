@@ -37,7 +37,7 @@ public class ProblemController {
                            @RequestParam(required = false) Integer difficulty,
                            @PageableDefault Pageable pageable,
                            Model model) {
-        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable);
+        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable, difficulty, status);
         model.addAttribute("problems", problems);
 
         return "problems";

@@ -76,11 +76,11 @@ public class ProblemService{
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Page<ProblemShow> showAllProblemsByUser(Pageable pageable) {
+    public Page<ProblemShow> showAllProblemsByUser(Pageable pageable, Integer difficulty, Boolean status) {
         if ( httpSession.getAttribute("user") != null ) {
             SessionUser user = (SessionUser) httpSession.getAttribute("user");
             Long id = userService.findByEmail(user.getEmail());
-            Page<ProblemShow> problemList = problemRepository.SearchProblemsWithStatus(id, pageable);
+            Page<ProblemShow> problemList = problemRepository.SearchProblemsWithStatus(id, pageable, difficulty, status);
             return problemList;
         }
         return showAllProblems(pageable);
