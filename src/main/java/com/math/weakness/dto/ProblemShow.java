@@ -1,4 +1,4 @@
-package com.math.weakness.domain;
+package com.math.weakness.dto;
 
 import lombok.Builder;
 import lombok.Getter;

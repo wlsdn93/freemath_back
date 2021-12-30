@@ -1,16 +1,19 @@
 package com.math.weakness.service;
 
+import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.Problem;
-import com.math.weakness.domain.ProblemShow;
+import com.math.weakness.dto.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
-import com.math.weakness.repository.CustomProblemRepositoryImpl;
 import com.math.weakness.repository.ProblemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Transactional
@@ -18,12 +21,17 @@ import javax.transaction.Transactional;
 public class ProblemService{
 
     private final ProblemRepository problemRepository;
-    private final CustomProblemRepositoryImpl customProblemRepository;
+    private final HttpSession httpSession;
+    private final UserService userService;
+
 
     @Autowired
-    public ProblemService(ProblemRepository problemRepository, CustomProblemRepositoryImpl customProblemRepository) {
+    public ProblemService(ProblemRepository problemRepository,
+                          HttpSession httpSession,
+                          UserService userService) {
         this.problemRepository = problemRepository;
-        this.customProblemRepository = customProblemRepository;
+        this.httpSession = httpSession;
+        this.userService = userService;
     }
 
     /**
@@ -53,20 +61,29 @@ public class ProblemService{
     /**
      * 페이징 처리
      */
-//    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-//    public Page<ProblemResponseDto> findAllProblem(Pageable pageable) {
-//        int page = (pageable.getPageNumber() == 0 ) ? 0 : (pageable.getPageNumber()-1);
-//        Sort sort = Sort.by(Sort.Direction.DESC, "problemId");
-//        PageRequest pageRequest = PageRequest.of(page, 10, sort);
-//        Page<Problem> problems = problemRepository.findAll(pageRequest);
-//        Page<ProblemResponseDto> problemList = problems.map(problem -> new ProblemResponseDto(problem));
-//        return problemList;
-//    }
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Page<ProblemShow> showAllProblems(Pageable pageable) {
+        int page = (pageable.getPageNumber() == 0 ) ? 0 : (pageable.getPageNumber()-1);
+        Sort sort = Sort.by(Sort.Direction.DESC, "problemId");
+        PageRequest pageRequest = PageRequest.of(page, 10, sort);
+        Page<Problem> problems = problemRepository.findAll(pageRequest);
+        Page<ProblemShow> problemList = problems.map(problem -> ProblemShow.builder()
+                        .problemId(problem.getProblemId())
+                        .title(problem.getTitle())
+                        .difficulty(problem.getDifficulty())
+                        .build());
+        return problemList;
+    }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Page<ProblemShow> showAllProblemsByUser(Pageable pageable, Long id) {
-        Page<ProblemShow> problemList = problemRepository.SearchProblemsWithStatus(id, pageable);
-        return problemList;
+    public Page<ProblemShow> showAllProblemsByUser(Pageable pageable) {
+        if ( httpSession.getAttribute("user") != null ) {
+            SessionUser user = (SessionUser) httpSession.getAttribute("user");
+            Long id = userService.findByEmail(user.getEmail());
+            Page<ProblemShow> problemList = problemRepository.SearchProblemsWithStatus(id, pageable);
+            return problemList;
+        }
+        return showAllProblems(pageable);
     }
 
 

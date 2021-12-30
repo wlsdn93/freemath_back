@@ -1,7 +1,6 @@
 package com.math.weakness.repository;
 
-import com.math.weakness.domain.Problem;
-import com.math.weakness.domain.ProblemShow;
+import com.math.weakness.dto.ProblemShow;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
