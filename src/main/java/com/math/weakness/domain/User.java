@@ -16,7 +16,7 @@ public class User {
     private Long userId;
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
