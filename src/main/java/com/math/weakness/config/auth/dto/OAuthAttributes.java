@@ -36,7 +36,6 @@ public class OAuthAttributes {
         return ofNaver(userNameAttributeName, attributes);
     }
 
-
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
         Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get("profile");

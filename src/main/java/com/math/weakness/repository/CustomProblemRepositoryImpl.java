@@ -39,6 +39,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .leftJoin(userProblem)
                 .on(this.isEqProblemAndUserProblemId().and(this.isEqUserProblem(conditions.getId())))
                 .where(this.isEqProblem(conditions.getDifficulty()), this.isEqUserProblem(conditions.getStatus()))
+                .offset(conditions.getPageable().getOffset())
                 .limit(conditions.getPageable().getPageSize())
                 .orderBy(problem.problemId.desc());
     }
