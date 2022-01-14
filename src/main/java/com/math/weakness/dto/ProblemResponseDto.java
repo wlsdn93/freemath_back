@@ -2,6 +2,7 @@ package com.math.weakness.dto;
 
 import com.math.weakness.domain.Problem;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

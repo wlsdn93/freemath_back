@@ -2,11 +2,16 @@ package com.math.weakness.service;
 
 import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.Problem;
+import com.math.weakness.domain.User;
+import com.math.weakness.domain.UserProblem;
 import com.math.weakness.dto.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
+import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.repository.ProblemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.math.weakness.repository.UserProblemRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,21 +23,37 @@ import javax.transaction.Transactional;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ProblemService{
 
     private final ProblemRepository problemRepository;
     private final HttpSession httpSession;
     private final UserService userService;
+    private final UserProblemRepository userProblemRepository;
 
-
-    @Autowired
-    public ProblemService(ProblemRepository problemRepository,
-                          HttpSession httpSession,
-                          UserService userService) {
-        this.problemRepository = problemRepository;
-        this.httpSession = httpSession;
-        this.userService = userService;
+    public void saveResult(UserProblemDto userProblemDto) {
+        long userId = userProblemDto.getUserId();
+        User user = userService.findById(userId);
+        long problemId = userProblemDto.getProblemId();
+        Problem problem = problemRepository.findById(problemId).get();
+        String answer = userProblemDto.getAnswer();
+        String problemAnswer = problem.getAnswer();
+        log.info("problemAnswer = {}", problemAnswer);
+        log.info("answer = {}", answer);
+        boolean status;
+        if (problemAnswer.equals(answer)) {
+            status = true;
+        } else {
+            status = false;
+        }
+        userProblemRepository.save(UserProblem.builder()
+                        .user(user)
+                        .problem(problem)
+                        .status(status)
+                        .build());
     }
+
 
     /**
      * 추가
@@ -85,6 +106,7 @@ public class ProblemService{
         }
         return showAllProblems(pageable);
     }
+
 
 
     /**

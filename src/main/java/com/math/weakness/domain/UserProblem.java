@@ -1,5 +1,6 @@
 package com.math.weakness.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,10 @@ public class UserProblem {
     @Column(name = "STATUS")
     private Boolean status;
 
+    @Builder
+    public UserProblem(User user, Problem problem, Boolean status) {
+        this.user = user;
+        this.problem = problem;
+        this.status = status;
+    }
 }

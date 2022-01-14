@@ -1,15 +1,25 @@
 package com.math.weakness.service;
 
+import com.math.weakness.domain.User;
+import com.math.weakness.repository.UserProblemRepository;
 import com.math.weakness.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserProblemRepository userProblemRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public User findById(long id) {
+        return userRepository.findById(id).get();
+    }
+
+    public Long join(UserRequestDto userRequestDto) {
+        User entity = userRepository.save(userRequestDto.toEntity());
+        return entity.getUserId();
     }
 
     public Long findByEmail(String email) {
