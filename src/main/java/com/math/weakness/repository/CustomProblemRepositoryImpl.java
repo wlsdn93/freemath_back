@@ -1,6 +1,7 @@
 package com.math.weakness.repository;
 
 import com.math.weakness.dto.ProblemShow;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.QBean;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -26,11 +27,43 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProblemShow> findByDifficultyAndStatus(Long id, Pageable pageable, Integer difficulty, Boolean status) {
+    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable,
+            Integer difficulty, Boolean status) {
         Conditions conditions = Conditions.of(id, pageable, difficulty, status);
         List<ProblemShow> content = this.query(conditions).fetch();
         return PageableExecutionUtils.getPage(content, pageable, this.query(conditions)::fetchCount);
     }
+
+    @Override
+    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty,
+            Boolean status) {
+        List<ProblemShow> queryResult = jpaQueryFactory
+                .select(Projections.fields(ProblemShow.class,
+                        problem.problemId,
+                        problem.title,
+                        problem.difficulty))
+                .from(problem)
+                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(problem.problemId.desc())
+                .fetch();
+
+        JPAQuery<ProblemShow> count = jpaQueryFactory
+                .select(Projections.fields(ProblemShow.class,
+                        problem.problemId,
+                        problem.title,
+                        problem.difficulty))
+                .from(problem)
+                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(problem.problemId.desc());
+
+        return PageableExecutionUtils.getPage(queryResult, pageable, () -> count.fetchCount());
+    }
+
+
 
     private JPAQuery<ProblemShow> query(Conditions conditions) {
         return jpaQueryFactory

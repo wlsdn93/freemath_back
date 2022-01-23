@@ -2,6 +2,7 @@ package com.math.weakness.web;
 
 import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.Problem;
+import com.math.weakness.dto.PageResponse;
 import com.math.weakness.dto.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/problems")
 public class ProblemController {
 
@@ -46,15 +47,15 @@ public class ProblemController {
         this.userService = userService;
     }
 
+    @CrossOrigin
     @GetMapping
-    public String problems(@RequestParam(required = false) Boolean status,
-                           @RequestParam(required = false) Integer difficulty,
-                           @PageableDefault Pageable pageable,
-                           Model model) {
-        Page<ProblemShow> problems = problemService.showAllProblemsByUser(pageable, difficulty, status);
-        model.addAttribute("problems", problems);
-
-        return "problems";
+    public PageResponse problems(@RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) Integer difficulty,
+            @PageableDefault Pageable pageable
+            ) {
+        PageResponse problems = problemService.showAllProblems(pageable, difficulty,
+                status);
+        return problems;
     }
 
     @GetMapping("/add")
@@ -62,31 +63,21 @@ public class ProblemController {
         return "add-form";
     }
 
-//    @GetMapping("/{problemId}")
-//    public ResponseEntity<Resource> displayProblem(@PathVariable long problemId) {
-//        ProblemResponseDto problemResponseDto = problemService.findById(problemId);
-//        String problemFilePath = fileDir + problemResponseDto.getProblemImageName();
-//        FileOutputStream fos = new FileOutputStream();
-//        Resource resource = new FileSystemResource(problemFilePath);
-//        HttpHeaders header = new HttpHeaders();
-//        header.add("Content-Type", "image/png");
-//        return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
-//    }
 
     @GetMapping("/{problemId}")
     public String showProblem(@PathVariable long problemId, Model model) {
-    ProblemResponseDto problemResponseDto = problemService.findById(problemId);
-    String problemFilePath = fileDir + problemResponseDto.getProblemImageName();
-    model.addAttribute("problemFilePath",problemFilePath);
-    model.addAttribute("problemId", problemId);
-    return "problem";
+        ProblemResponseDto problemResponseDto = problemService.findById(problemId);
+        String problemFilePath = fileDir + problemResponseDto.getProblemImageName();
+        model.addAttribute("problemFilePath", problemFilePath);
+        model.addAttribute("problemId", problemId);
+        return "problem";
     }
 
     @PostMapping("/{problemId}")
     public String solveProblem(@PathVariable Long problemId,
-                               @RequestParam String answer,
-                               RedirectAttributes redirectAttributes,
-                               HttpSession httpSession) {
+            @RequestParam String answer,
+            RedirectAttributes redirectAttributes,
+            HttpSession httpSession) {
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         Long userId = userService.findByEmail(user.getEmail());
 
@@ -102,13 +93,14 @@ public class ProblemController {
         return "redirect:/problems/{problemId}";
     }
 
+    @CrossOrigin
     @PostMapping("/add")
     public String problems(@RequestParam MultipartFile problemImageFile,
-                        @RequestParam MultipartFile solutionImageFile,
-                        @RequestParam String title,
-                        @RequestParam String answer,
-                        @RequestParam String difficulty
-                        ) throws IOException {
+            @RequestParam MultipartFile solutionImageFile,
+            @RequestParam String title,
+            @RequestParam String answer,
+            @RequestParam String difficulty
+    ) throws IOException {
 
         String problemOriginalName = problemImageFile.getOriginalFilename();
         String solutionOriginalNane = solutionImageFile.getOriginalFilename();
@@ -116,12 +108,12 @@ public class ProblemController {
         String solutionFilePath = fileDir + solutionOriginalNane;
 
         ProblemRequestDto requestDto = ProblemRequestDto.builder()
-                                        .title(title)
-                                        .difficulty(Integer.parseInt(difficulty))
-                                        .answer(answer)
-                                        .problemImageName(problemOriginalName)
-                                        .solutionImageName(solutionOriginalNane)
-                                        .build();
+                .title(title)
+                .difficulty(Integer.parseInt(difficulty))
+                .answer(answer)
+                .problemImageName(problemOriginalName)
+                .solutionImageName(solutionOriginalNane)
+                .build();
 
         problemService.addProblem(requestDto);
 

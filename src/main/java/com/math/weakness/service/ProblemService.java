@@ -4,6 +4,7 @@ import com.math.weakness.config.auth.dto.SessionUser;
 import com.math.weakness.domain.Problem;
 import com.math.weakness.domain.User;
 import com.math.weakness.domain.UserProblem;
+import com.math.weakness.dto.PageResponse;
 import com.math.weakness.dto.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
@@ -25,7 +26,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProblemService{
+public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final HttpSession httpSession;
@@ -48,10 +49,10 @@ public class ProblemService{
             status = false;
         }
         userProblemRepository.save(UserProblem.builder()
-                        .user(user)
-                        .problem(problem)
-                        .status(status)
-                        .build());
+                .user(user)
+                .problem(problem)
+                .status(status)
+                .build());
     }
 
 
@@ -83,30 +84,21 @@ public class ProblemService{
      * 페이징 처리
      */
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Page<ProblemShow> showAllProblems(Pageable pageable) {
-        int page = (pageable.getPageNumber() == 0 ) ? 0 : (pageable.getPageNumber()-1);
-        Sort sort = Sort.by(Sort.Direction.DESC, "problemId");
-        PageRequest pageRequest = PageRequest.of(page, 10, sort);
-        Page<Problem> problems = problemRepository.findAll(pageRequest);
-        Page<ProblemShow> problemList = problems.map(problem -> ProblemShow.builder()
-                        .problemId(problem.getProblemId())
-                        .title(problem.getTitle())
-                        .difficulty(problem.getDifficulty())
-                        .build());
-        return problemList;
-    }
-
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public Page<ProblemShow> showAllProblemsByUser(Pageable pageable, Integer difficulty, Boolean status) {
-        if ( httpSession.getAttribute("user") != null ) {
+    public PageResponse showAllProblems(Pageable pageable, Integer difficulty,
+            Boolean status) {
+        if (httpSession.getAttribute("user") != null) {
             SessionUser user = (SessionUser) httpSession.getAttribute("user");
             Long id = userService.findByEmail(user.getEmail());
-            Page<ProblemShow> problemList = problemRepository.findByDifficultyAndStatus(id, pageable, difficulty, status);
-            return problemList;
+            Page<ProblemShow> problemList = problemRepository.findByDifficultyAndStatusAndId(id,
+                    pageable, difficulty, status);
+            PageResponse pageResponse = new PageResponse(problemList);
+            return pageResponse;
         }
-        return showAllProblems(pageable);
-    }
+        Page<ProblemShow> problemList = problemRepository.findByDifficultyAndStatus(pageable, difficulty, status);
+        PageResponse pageResponse = new PageResponse(problemList);
 
+        return pageResponse;
+    }
 
 
     /**

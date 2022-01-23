@@ -21,6 +21,6 @@ class CustomProblemRepositoryImplTest {
         PageRequest pageable = PageRequest.of(1, 10);
         int difficulty = 1;
         boolean status = true;
-        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatus(id, pageable, difficulty, status);
+        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status);
     }
 }
