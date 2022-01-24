@@ -1,6 +1,7 @@
 package com.math.weakness.domain;
 
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Problem {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,7 +55,7 @@ public class Problem {
     private List<ProblemTag> problemTags = new ArrayList<>();
 
     @Builder
-    public Problem(String title, String answer, String problemImageName,
+    private Problem(String title, String answer, String problemImageName,
                    String solutionImageName, Integer difficulty, String author) {
         this.title = title;
         this.answer = answer;

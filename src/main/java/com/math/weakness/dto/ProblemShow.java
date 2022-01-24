@@ -14,7 +14,7 @@ public class ProblemShow {
     private Boolean status;
 
     @Builder
-    public ProblemShow(Long problemId, String title, Integer difficulty, Boolean status) {
+    private ProblemShow(Long problemId, String title, Integer difficulty, Boolean status) {
         this.problemId = problemId;
         this.title = title;
         this.difficulty = difficulty;

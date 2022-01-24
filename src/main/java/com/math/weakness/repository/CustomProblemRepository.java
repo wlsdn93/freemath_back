@@ -8,10 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface CustomProblemRepository {
 
     @Transactional(readOnly = true)
-    Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty,
-            Boolean status);
+    Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status);
 
     @Transactional(readOnly = true)
-    Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty,
-            Boolean status);
+    Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status);
+
 }
