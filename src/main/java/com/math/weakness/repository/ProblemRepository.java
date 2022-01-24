@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProblemRepository extends JpaRepository<Problem, Long>, CustomProblemRepository {
 
     @Override
-    Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable,
-                                                Integer difficulty, Boolean status);
+    Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status);
+
     @Override
-    Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable,
-                                                Integer difficulty, Boolean status);
+    Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status);
+
 }

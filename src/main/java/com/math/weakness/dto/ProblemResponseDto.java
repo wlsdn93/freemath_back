@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 @Getter
 public class ProblemResponseDto {
 
-    private Long problemId;
-    private String title;
-    private String answer;
-    private String problemImageName;
-    private String solutionImageName;
-    private Integer difficulty;
-    private String author;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private final Long problemId;
+    private final String title;
+    private final String answer;
+    private final String problemImageName;
+    private final String solutionImageName;
+    private final Integer difficulty;
+    private final String author;
+    private final LocalDateTime createdDate;
+    private final LocalDateTime modifiedDate;
 
-    public ProblemResponseDto(Problem entity) {
+    private ProblemResponseDto(Problem entity) {
         this.problemId = entity.getProblemId();
         this.title = entity.getTitle();
         this.answer = entity.getAnswer();
@@ -29,5 +29,9 @@ public class ProblemResponseDto {
         this.author = entity.getAuthor();
         this.createdDate = entity.getCreatedDate();
         this.modifiedDate = entity.getModifiedDate();
+    }
+
+    public static ProblemResponseDto from(Problem entity) {
+        return new ProblemResponseDto(entity);
     }
 }

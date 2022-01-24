@@ -1,34 +1,35 @@
 package com.math.weakness.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProblem {
 
     @EmbeddedId
     private UserProblemId userProblemId = new UserProblemId();
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("problemId")
     @JoinColumn(name = "PROBLEM_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Problem problem;
 
     @Column(name = "STATUS")
     private Boolean status;
 
     @Builder
-    public UserProblem(User user, Problem problem, Boolean status) {
+    private UserProblem(User user, Problem problem, Boolean status) {
         this.user = user;
         this.problem = problem;
         this.status = status;
