@@ -27,16 +27,14 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable,
-            Integer difficulty, Boolean status) {
+    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status) {
         Conditions conditions = Conditions.of(id, pageable, difficulty, status);
         List<ProblemShow> content = this.query(conditions).fetch();
         return PageableExecutionUtils.getPage(content, pageable, this.query(conditions)::fetchCount);
     }
 
     @Override
-    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty,
-            Boolean status) {
+    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status) {
         List<ProblemShow> queryResult = jpaQueryFactory
                 .select(Projections.fields(ProblemShow.class,
                         problem.problemId,
@@ -60,10 +58,8 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc());
 
-        return PageableExecutionUtils.getPage(queryResult, pageable, () -> count.fetchCount());
+        return PageableExecutionUtils.getPage(queryResult, pageable, count::fetchCount);
     }
-
-
 
     private JPAQuery<ProblemShow> query(Conditions conditions) {
         return jpaQueryFactory
