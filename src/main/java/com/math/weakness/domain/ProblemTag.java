@@ -1,13 +1,14 @@
 package com.math.weakness.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProblemTag {
 
     @EmbeddedId

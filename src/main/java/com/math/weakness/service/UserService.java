@@ -14,7 +14,8 @@ public class UserService {
     private final UserProblemRepository userProblemRepository;
 
     public User findById(long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id)
+                .orElseThrow();
     }
 
     public Long join(UserRequestDto userRequestDto) {
@@ -23,6 +24,8 @@ public class UserService {
     }
 
     public Long findByEmail(String email) {
-       return userRepository.findByEmail(email).get().getUserId();
+       return userRepository.findByEmail(email)
+               .orElseThrow()
+               .getUserId();
     }
 }
