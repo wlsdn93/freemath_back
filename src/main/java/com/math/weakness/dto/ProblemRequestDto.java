@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProblemRequestDto {
@@ -22,8 +20,8 @@ public class ProblemRequestDto {
     private String author;
 
     @Builder
-    public ProblemRequestDto(String title, String answer, String problemImageAddress, String problemImageName,
-                             String solutionImageAddress, String solutionImageName, Integer difficulty, String author) {
+    private ProblemRequestDto(String title, String answer, String problemImageAddress, String problemImageName,
+                              String solutionImageAddress, String solutionImageName, Integer difficulty, String author) {
         this.title = title;
         this.answer = answer;
         this.problemImageAddress = problemImageAddress;
@@ -33,7 +31,6 @@ public class ProblemRequestDto {
         this.difficulty = difficulty;
         this.author = author;
     }
-
 
     public Problem toEntity() {
         return Problem.builder()

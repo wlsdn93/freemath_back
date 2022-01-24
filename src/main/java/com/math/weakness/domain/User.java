@@ -1,5 +1,6 @@
 package com.math.weakness.domain;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,17 +8,19 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-@Getter
-@NoArgsConstructor
+
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long userId;
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true)
+               cascade = CascadeType.PERSIST,
+               orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
     @Column(name = "name")
@@ -35,7 +38,7 @@ public class User {
     private Platform platform;
 
     @Builder
-    public User(String name, String email, Role role, Platform platform) {
+    private User(String name, String email, Role role, Platform platform) {
         this.name = name;
         this.email = email;
         this.role = role;

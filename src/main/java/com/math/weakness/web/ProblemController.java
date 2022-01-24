@@ -9,6 +9,7 @@ import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.service.ProblemService;
 import com.math.weakness.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -32,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/problems")
 public class ProblemController {
 
@@ -41,21 +43,16 @@ public class ProblemController {
     @Value("${file.dir}")
     private String fileDir;
 
-    @Autowired
-    public ProblemController(ProblemService problemService, UserService userService) {
-        this.problemService = problemService;
-        this.userService = userService;
-    }
-
     @CrossOrigin
     @GetMapping
-    public PageResponse problems(@RequestParam(required = false) Boolean status,
+    public PageResponse problems(
+            @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) Integer difficulty,
             @PageableDefault Pageable pageable
             ) {
-        PageResponse problems = problemService.showAllProblems(pageable, difficulty,
-                status);
-        return problems;
+        return problemService.showAllProblems(
+                pageable, difficulty, status
+        );
     }
 
     @GetMapping("/add")
@@ -74,10 +71,12 @@ public class ProblemController {
     }
 
     @PostMapping("/{problemId}")
-    public String solveProblem(@PathVariable Long problemId,
+    public String solveProblem(
+            @PathVariable Long problemId,
             @RequestParam String answer,
             RedirectAttributes redirectAttributes,
-            HttpSession httpSession) {
+            HttpSession httpSession
+    ) {
         SessionUser user = (SessionUser) httpSession.getAttribute("user");
         Long userId = userService.findByEmail(user.getEmail());
 
@@ -95,7 +94,8 @@ public class ProblemController {
 
     @CrossOrigin
     @PostMapping("/add")
-    public String problems(@RequestParam MultipartFile problemImageFile,
+    public String problems(
+            @RequestParam MultipartFile problemImageFile,
             @RequestParam MultipartFile solutionImageFile,
             @RequestParam String title,
             @RequestParam String answer,
