@@ -12,7 +12,7 @@ public class UserProblemDto {
     private String answer;
 
     @Builder
-    public UserProblemDto(long userId, long problemId, String answer) {
+    private UserProblemDto(long userId, long problemId, String answer) {
         this.userId = userId;
         this.problemId = problemId;
         this.answer = answer;

@@ -58,7 +58,7 @@ public class ProblemService {
         Problem foundProblem = problemRepository.findById(id)
                 .orElseThrow();
 
-        return new ProblemResponseDto(foundProblem);
+        return ProblemResponseDto.from(foundProblem);
     }
 
     @Transactional(readOnly = true)
