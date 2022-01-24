@@ -1,13 +1,14 @@
 package com.math.weakness.domain;
 
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@NoArgsConstructor
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProblemTagId implements Serializable {
 
     @Column
