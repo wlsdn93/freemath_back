@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -31,9 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers(header -> header
                         .frameOptions().disable())
                 .authorizeHttpRequests(requests -> requests
-                        .antMatchers("/problems/add").hasRole(Role.ADMIN.name())
+                        .antMatchers("/**").permitAll()
+                        .antMatchers().hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
-                )
+                        )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                 )
@@ -41,5 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService)
                 );
+//        http.addFilterAfter(new CorsFilter(), CsrfFilter.class);
     }
 }

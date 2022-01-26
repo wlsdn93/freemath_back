@@ -18,11 +18,6 @@ public class UserService {
                 .orElseThrow();
     }
 
-    public Long join(UserRequestDto userRequestDto) {
-        User entity = userRepository.save(userRequestDto.toEntity());
-        return entity.getUserId();
-    }
-
     public Long findByEmail(String email) {
        return userRepository.findByEmail(email)
                .orElseThrow()

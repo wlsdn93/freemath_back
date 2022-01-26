@@ -50,10 +50,12 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-thymeleaf',
             'org.springframework.boot:spring-boot-starter-web',
+            'org.springframework.boot:spring-boot-starter-webflux',
             'org.springframework.boot:spring-boot-starter-oauth2-client',
             'org.springframework.session:spring-session-jdbc',
             "com.querydsl:querydsl-jpa:${queryDslVersion}",
             "com.querydsl:querydsl-apt:${queryDslVersion}",
+            "com.googlecode.json-simple:json-simple:1.1.1"
     )
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
