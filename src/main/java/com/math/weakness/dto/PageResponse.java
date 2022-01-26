@@ -28,7 +28,8 @@ public class PageResponse {
         int startPage = (pageNumber / pageSize) * pageSize + 1;
         int tempEndPage = startPage + pageSize - 1;
         int endPage = Math.min(tempEndPage, totalPage);
-
+        this.first = problemList.isFirst();
+        this.last = problemList.isLast();
         this.content = problemList.getContent();
         this.totalPage = totalPage;
         this.page = pageNumber + 1;

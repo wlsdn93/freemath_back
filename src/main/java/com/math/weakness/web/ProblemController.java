@@ -1,21 +1,14 @@
 package com.math.weakness.web;
 
 import com.math.weakness.config.auth.dto.SessionUser;
-import com.math.weakness.domain.Problem;
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemShow;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.service.ProblemService;
 import com.math.weakness.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +36,6 @@ public class ProblemController {
     @Value("${file.dir}")
     private String fileDir;
 
-    @CrossOrigin
     @GetMapping
     public PageResponse problems(
             @RequestParam(required = false) Boolean status,
@@ -92,7 +84,6 @@ public class ProblemController {
         return "redirect:/problems/{problemId}";
     }
 
-    @CrossOrigin
     @PostMapping("/add")
     public String problems(
             @RequestParam MultipartFile problemImageFile,
