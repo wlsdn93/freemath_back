@@ -9,4 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginController {
 
+    @GetMapping("/vue")
+    public String vue(){
+        return "vue/index";
+    }
 }
