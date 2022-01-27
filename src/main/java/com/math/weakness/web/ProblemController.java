@@ -1,6 +1,5 @@
 package com.math.weakness.web;
 
-import com.math.weakness.security.dto.SessionUser;
 import com.math.weakness.dto.PageResponse;
 import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
