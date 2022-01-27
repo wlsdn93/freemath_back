@@ -35,7 +35,10 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor (
+            'org.projectlombok:lombok',
+            'org.springframework.boot:spring-boot-configuration-processor',
+    )
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -44,6 +47,8 @@ dependencies {
     runtimeOnly(
             'org.mariadb.jdbc:mariadb-java-client',
             'com.h2database:h2',
+            "io.jsonwebtoken:jjwt-impl:0.11.2",
+            "io.jsonwebtoken:jjwt-jackson:0.11.2",
     )
 
     implementation(
@@ -55,7 +60,8 @@ dependencies {
             'org.springframework.session:spring-session-jdbc',
             "com.querydsl:querydsl-jpa:${queryDslVersion}",
             "com.querydsl:querydsl-apt:${queryDslVersion}",
-            "com.googlecode.json-simple:json-simple:1.1.1"
+            "com.googlecode.json-simple:json-simple:1.1.1",
+            "io.jsonwebtoken:jjwt-api:0.11.2",
     )
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
