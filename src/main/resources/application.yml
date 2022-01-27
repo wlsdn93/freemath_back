@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/practice
+    username: root
+    password: wind@1011
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true  #To beautify or pretty print the SQL
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  devtools:
+    livereload:
+      enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 2MB #file upload size restriction
+
+  profiles:
+    active: oauth
+
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: DEBUG #show parameter binding
+
+file:
+  dir: C:/project/src/main/resources/static/image/
