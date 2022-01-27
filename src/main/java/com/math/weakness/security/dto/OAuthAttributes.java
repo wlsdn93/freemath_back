@@ -1,4 +1,4 @@
-package com.math.weakness.config.auth.dto;
+package com.math.weakness.security.dto;
 
 import com.math.weakness.domain.Platform;
 import com.math.weakness.domain.Role;
@@ -37,7 +37,6 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        // fixme Unchecked cast: 'java.lang.Object' to 'java.util.Map<java.lang.String,java.lang.Object>'
         Map<String, Object> kakaoAccount = (Map<String, Object>)attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get("profile");
         log.info("ofKakao operated");
@@ -51,7 +50,6 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
-        // fixme Unchecked cast: 'java.lang.Object' to 'java.util.Map<java.lang.String,java.lang.Object>'
         Map<String, Object> response = (Map<String, Object>)attributes.get("response");
         return OAuthAttributes.builder()
                 .name((String)response.get("name"))

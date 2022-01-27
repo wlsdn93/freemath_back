@@ -1,4 +1,4 @@
-package com.math.weakness.config.auth;
+package com.math.weakness.security;
 
 import java.io.IOException;
 import javax.servlet.Filter;

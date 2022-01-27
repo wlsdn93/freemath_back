@@ -1,4 +1,4 @@
-package com.math.weakness.config.auth.dto;
+package com.math.weakness.security.dto;
 
 import com.math.weakness.domain.User;
 import lombok.Getter;

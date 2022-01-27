@@ -1,7 +1,7 @@
-package com.math.weakness.config.auth;
+package com.math.weakness.security.oauth2Custom;
 
-import com.math.weakness.config.auth.dto.OAuthAttributes;
-import com.math.weakness.config.auth.dto.SessionUser;
+import com.math.weakness.security.dto.OAuthAttributes;
+import com.math.weakness.security.dto.SessionUser;
 import com.math.weakness.domain.User;
 import com.math.weakness.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,11 @@
-package com.math.weakness.config.auth;
+package com.math.weakness.security;
 
 import com.math.weakness.domain.Role;
+import com.math.weakness.security.oauth2Custom.CustomAuthorizationRequestResolver;
+import com.math.weakness.security.oauth2Custom.CustomOAuth2UserService;
+import com.math.weakness.security.oauth2Custom.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.math.weakness.security.oauth2Custom.OAuth2AuthenticationFailureHandler;
+import com.math.weakness.security.oauth2Custom.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 
 @EnableWebSecurity
@@ -15,6 +21,9 @@ import org.springframework.security.web.csrf.CsrfFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -39,10 +48,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint()
-                        .userService(customOAuth2UserService)
-                );
-//        http.addFilterAfter(new CorsFilter(), CsrfFilter.class);
+                .oauth2Login()
+                .authorizationEndpoint()
+                    .baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                    .and()
+                .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                    .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
+        http.addFilterAfter(new CorsFilter(), CsrfFilter.class);
     }
 }
