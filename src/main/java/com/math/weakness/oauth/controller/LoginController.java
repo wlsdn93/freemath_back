@@ -19,9 +19,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RestController
 public class LoginController {
 
-    @Value("${oauth2.client.registration.naver.clientId}")
+    @Value("${oauth2.client.naver.client-id}")
     private String naverClientId;
-    @Value("${oauth2.client.registration.naver.clientSecret}")
+    @Value("${oauth2.client.naver.client-secret}")
     private String naverClientSecret;
 
     @Autowired
