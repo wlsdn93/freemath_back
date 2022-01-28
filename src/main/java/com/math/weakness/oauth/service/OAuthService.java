@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class OAuthService {
 
+    @Autowired
     private WebClient webClient;
 
     @Value("${oauth2.client.naver.client-id}")
@@ -58,13 +60,13 @@ public class OAuthService {
         }
 
         Map userInfo = getUserInfo(code, clientId, clientSecret);
-
+        log.info("{}", userInfo.toString());
         return "http://localhost:8081";
     }
 
     public Map getUserInfo(String code, String clientId, String clientSecret) {
         Map<String, String> tokenInfo = getTokenInfo(code, clientId, clientSecret);
-        JSONObject response = webClient.mutate()
+        JSONObject userInfoResponse = webClient.mutate()
                 .baseUrl("https://openapi.naver.com/v1/nid/me")
                 .defaultHeader("Authorization", "Bearer " + tokenInfo.get("access_token"))
                 .build()
@@ -72,7 +74,7 @@ public class OAuthService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-        Map profile = (Map)response.get("response");
+        Map profile = (Map)userInfoResponse.get("response");
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("email", profile.get("email").toString());
         userInfo.put("name", profile.get("name").toString());
@@ -80,7 +82,7 @@ public class OAuthService {
     }
 
     public Map<String, String> getTokenInfo(String code, String clientId, String clientSecret){
-        JSONObject response = webClient.mutate()
+        JSONObject tokenResponse = webClient.mutate()
                 .baseUrl("https://nid.naver.com")
                 .build()
                 .get()
@@ -94,10 +96,10 @@ public class OAuthService {
                 .bodyToMono(JSONObject.class)
                 .block();
         Map<String, String> tokenInfo = new HashMap<>();
-        tokenInfo.put("access_token", response.get("access_token").toString());
-        tokenInfo.put("refresh_token", response.get("refresh_token").toString());
-        tokenInfo.put("token_type", response.get("token_type").toString());
-        tokenInfo.put("expires_in", response.get("expires_in").toString());
+        tokenInfo.put("access_token", tokenResponse.get("access_token").toString());
+        tokenInfo.put("refresh_token", tokenResponse.get("refresh_token").toString());
+        tokenInfo.put("token_type", tokenResponse.get("token_type").toString());
+        tokenInfo.put("expires_in", tokenResponse.get("expires_in").toString());
 
         return tokenInfo;
     }
