@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "AUTHENTICATION_STATE")
 public class AuthenticationState {
 
     @Id
@@ -24,7 +23,7 @@ public class AuthenticationState {
     @Column(name = "STATE")
     private String state;
 
-    @Column(name = "CREATED")
+    @Column(name = "VALID_TIME")
     private LocalDateTime validTime = LocalDateTime.now().plusSeconds(30);
 
     public AuthenticationState(String state) {

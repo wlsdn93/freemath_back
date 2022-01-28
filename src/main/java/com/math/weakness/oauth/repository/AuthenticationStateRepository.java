@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthenticationStateRepository extends JpaRepository<AuthenticationState, Long> {
 
-    void deleteByValidTimeAfter(LocalDateTime now);
+    void deleteByValidTimeLessThan(LocalDateTime now);
+    AuthenticationState findByState(String State);
 
 }
