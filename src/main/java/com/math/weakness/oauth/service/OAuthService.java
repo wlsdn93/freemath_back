@@ -52,11 +52,11 @@ public class OAuthService {
 
     public String oAuthLogin(String code, String state, String social) {
 
-        stateRepository.deleteByValidTimeAfter(LocalDateTime.now());
+        stateRepository.deleteByValidTimeLessThan(LocalDateTime.now());
         log.info("delete expired authenticationState has called");
-        boolean isExistState = stateRepository.findAll().contains(state);
+        AuthenticationState authenticationState = stateRepository.findByState(state);
         log.info("state valid process has called");
-        if (!isExistState) {
+        if (authenticationState == null) {
             return "http://localhost:8081/login?error=request_not_found";
         }
         String clientId, clientSecret;
