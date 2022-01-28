@@ -60,11 +60,9 @@ public class ProblemController {
     public String solveProblem(
             @PathVariable Long problemId,
             @RequestParam String answer,
-            RedirectAttributes redirectAttributes,
-            HttpSession httpSession
+            RedirectAttributes redirectAttributes
     ) {
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
-        Long userId = userService.findByEmail(user.getEmail());
+        Long userId = 1L;
 
         UserProblemDto userProblemDto = UserProblemDto.builder()
                 .userId(userId)

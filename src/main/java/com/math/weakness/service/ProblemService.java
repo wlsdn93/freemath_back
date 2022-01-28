@@ -67,8 +67,8 @@ public class ProblemService {
             Boolean status
     ) {
         if (httpSession.getAttribute("user") != null) {
-            SessionUser user = (SessionUser) httpSession.getAttribute("user");
-            Long id = userService.findByEmail(user.getEmail());
+
+            Long id = 1L;
             return new PageResponse(problemRepository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
         }
         return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
