@@ -1,22 +1,27 @@
 package com.math.weakness.oauth.service;
 
+import com.math.weakness.domain.AuthenticationState;
+import com.math.weakness.oauth.repository.AuthenticationStateRepository;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class OAuthService {
 
     private final WebClient webClient;
+    private final AuthenticationStateRepository stateRepository;
 
     @Value("${oauth2.client.naver.client-id}")
     private String naverClientId;
@@ -40,17 +45,21 @@ public class OAuthService {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-
+        log.info("getState method has called");
+        stateRepository.save(new AuthenticationState(alphanumericState));
         return alphanumericState;
     }
 
     public String oAuthLogin(String code, String state, String social) {
 
-        if (state.isEmpty()) {
+        stateRepository.deleteByValidTimeAfter(LocalDateTime.now());
+        log.info("delete expired authenticationState has called");
+        boolean isExistState = stateRepository.findAll().contains(state);
+        log.info("state valid process has called");
+        if (!isExistState) {
             return "http://localhost:8081/login?error=request_not_found";
         }
         String clientId, clientSecret;
-        // state check, social check here
         if (social.equals("naver")) {
             clientId = naverClientId;
             clientSecret = naverClientSecret;
