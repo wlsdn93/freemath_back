@@ -1,11 +1,15 @@
 package com.math.weakness.oauth.service;
 
 import com.math.weakness.domain.AuthenticationState;
+import com.math.weakness.domain.Platform;
+import com.math.weakness.domain.Role;
+import com.math.weakness.domain.User;
 import com.math.weakness.oauth.repository.AuthenticationStateRepository;
 import com.math.weakness.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,13 +67,27 @@ public class OAuthService {
         }
 
         Map<String, String> userInfo = getUserInfo(code);
-        String email = userInfo.get("email");
 
+        saveOrUpdate(userInfo);
+
+        // return JWT
         log.info("{}", userInfo);
         return "http://localhost:8081";
     }
 
-    public Map getUserInfo(String code) {
+    private User saveOrUpdate(Map<String, String> userInfo) {
+        User user = userRepository.findByEmail(userInfo.get("email"))
+                        .orElse(User.builder()
+                                    .name(userInfo.get("name"))
+                                    .email(userInfo.get("email"))
+                                    .role(Role.STUDENT)
+                                    .platform(Platform.NAVER)
+                                    .build());
+        log.info("saveOrUpdate method has called");
+        return userRepository.save(user);
+    }
+
+    private Map getUserInfo(String code) {
         Map<String, String> tokenInfo = getTokenInfo(code);
         JSONObject userInfoResponse = webClient.mutate()
                 .baseUrl(NAVER_USERINFO_API)
@@ -85,7 +103,8 @@ public class OAuthService {
         userInfo.put("name", profile.get("name").toString());
         return userInfo;
     }
-    public Map<String, String> getTokenInfo(String code){
+
+    private Map<String, String> getTokenInfo(String code){
 
         tokenResponse = webClient.mutate()
                 .baseUrl(NAVER_TOKEN_API)
