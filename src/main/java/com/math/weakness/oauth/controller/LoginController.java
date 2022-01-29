@@ -27,10 +27,9 @@ public class LoginController {
 
     @GetMapping
     private ResponseEntity<String> oAuthLogin(@RequestParam String code,
-            @RequestParam String state,
-            @RequestParam String social) {
+            @RequestParam String state) {
 
-            String redirectUri = oAuthService.oAuthLogin(code, state, social);
+            String redirectUri = oAuthService.oAuthLogin(code, state);
             return new ResponseEntity(redirectUri, new HttpHeaders(), HttpStatus.OK);
     }
 

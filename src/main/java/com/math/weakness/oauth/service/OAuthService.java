@@ -1,7 +1,6 @@
 package com.math.weakness.oauth.service;
 
 import com.math.weakness.domain.AuthenticationState;
-import com.math.weakness.oauth.dto.OAuth2Properties;
 import com.math.weakness.oauth.repository.AuthenticationStateRepository;
 import com.math.weakness.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -25,8 +24,16 @@ public class OAuthService {
     private final WebClient webClient;
     private final AuthenticationStateRepository stateRepository;
     private final UserRepository userRepository;
-    private OAuth2Properties oAuth2Properties;
     private JSONObject tokenResponse;
+
+    @Value("${oauth2.client.naver.client-id}")
+    private String NAVER_CLIENT_ID;
+    @Value("${oauth2.client.naver.client-secret}")
+    private String NAVER_CLIENT_SECRET;
+    @Value("${oauth2.client.naver.token-uri}")
+    private String NAVER_TOKEN_API;
+    @Value("${oauth2.client.naver.user-info-uri}")
+    private String NAVER_USERINFO_API;
 
     public String getState() {
 
@@ -45,7 +52,7 @@ public class OAuthService {
         return alphanumericState;
     }
 
-    public String oAuthLogin(String code, String state, String social) {
+    public String oAuthLogin(String code, String state) {
 
         stateRepository.deleteByValidTimeLessThan(LocalDateTime.now());
         log.info("delete expired authenticationState has called");
@@ -55,19 +62,17 @@ public class OAuthService {
             return "http://localhost:8081/login?error=request_not_found";
         }
 
-        OAuth2Properties oAuth2properties = oAuth2Properties.of(social);
-
-        Map<String, String> userInfo = getUserInfo(code, oAuth2properties);
+        Map<String, String> userInfo = getUserInfo(code);
         String email = userInfo.get("email");
 
         log.info("{}", userInfo);
         return "http://localhost:8081";
     }
 
-    public Map getUserInfo(String code, OAuth2Properties oAuth2Properties) {
-        Map<String, String> tokenInfo = getTokenInfo(code, oAuth2Properties);
+    public Map getUserInfo(String code) {
+        Map<String, String> tokenInfo = getTokenInfo(code);
         JSONObject userInfoResponse = webClient.mutate()
-                .baseUrl("https://openapi.naver.com/v1/nid/me")
+                .baseUrl(NAVER_USERINFO_API)
                 .defaultHeader("Authorization", "Bearer " + tokenInfo.get("access_token"))
                 .build()
                 .get()
@@ -80,36 +85,22 @@ public class OAuthService {
         userInfo.put("name", profile.get("name").toString());
         return userInfo;
     }
-    public Map<String, String> getTokenInfo(String code, OAuth2Properties oAuth2Properties){
+    public Map<String, String> getTokenInfo(String code){
 
-        if (oAuth2Properties.getProviderName().equals("naver")) {
-            tokenResponse = webClient.mutate()
-                    .baseUrl(oAuth2Properties.getTokenRequestApi())
-                    .build()
-                    .get()
-                    .uri(uriBuilder -> uriBuilder.path("/")
-                            .queryParam("grant_type", "authorization_code")
-                            .queryParam("client_id", oAuth2Properties.getClientId())
-                            .queryParam("client_secret", oAuth2Properties.getClientSecret())
-                            .queryParam("code", code)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(JSONObject.class)
-                    .block();
-        }
         tokenResponse = webClient.mutate()
-                .baseUrl(oAuth2Properties.getTokenRequestApi())
+                .baseUrl(NAVER_TOKEN_API)
                 .build()
-                .post()
+                .get()
                 .uri(uriBuilder -> uriBuilder.path("/")
                         .queryParam("grant_type", "authorization_code")
-                        .queryParam("client_id", oAuth2Properties.getClientId())
-                        .queryParam("client_secret", oAuth2Properties.getClientSecret())
+                        .queryParam("client_id", NAVER_CLIENT_ID)
+                        .queryParam("client_secret", NAVER_CLIENT_SECRET)
                         .queryParam("code", code)
                         .build())
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
+
         Map<String, String> tokenInfo = new HashMap<>();
         tokenInfo.put("access_token", tokenResponse.get("access_token").toString());
         tokenInfo.put("refresh_token", tokenResponse.get("refresh_token").toString());
