@@ -1,7 +1,9 @@
 package com.math.weakness.oauth.service;
 
 import com.math.weakness.domain.AuthenticationState;
+import com.math.weakness.oauth.dto.OAuth2Properties;
 import com.math.weakness.oauth.repository.AuthenticationStateRepository;
+import com.math.weakness.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,16 +24,9 @@ public class OAuthService {
 
     private final WebClient webClient;
     private final AuthenticationStateRepository stateRepository;
-
-    @Value("${oauth2.client.naver.client-id}")
-    private String naverClientId;
-    @Value("${oauth2.client.naver.client-secret}")
-    private String naverClientSecret;
-    @Value("${oauth2.client.kakao.client-id}")
-    private String kakaoClientId;
-    @Value("${oauth2.client.kakao.client-secret}")
-    private String kakaoClientSecret;
-
+    private final UserRepository userRepository;
+    private OAuth2Properties oAuth2Properties;
+    private JSONObject tokenResponse;
 
     public String getState() {
 
@@ -59,23 +54,18 @@ public class OAuthService {
         if (authenticationState == null) {
             return "http://localhost:8081/login?error=request_not_found";
         }
-        String clientId, clientSecret;
-        if (social.equals("naver")) {
-            clientId = naverClientId;
-            clientSecret = naverClientSecret;
-        }
-        else {
-            clientId = kakaoClientId;
-            clientSecret = kakaoClientSecret;
-        }
 
-        Map userInfo = getUserInfo(code, clientId, clientSecret);
-        log.info("{}", userInfo.toString());
+        OAuth2Properties oAuth2properties = oAuth2Properties.of(social);
+
+        Map<String, String> userInfo = getUserInfo(code, oAuth2properties);
+        String email = userInfo.get("email");
+
+        log.info("{}", userInfo);
         return "http://localhost:8081";
     }
 
-    public Map getUserInfo(String code, String clientId, String clientSecret) {
-        Map<String, String> tokenInfo = getTokenInfo(code, clientId, clientSecret);
+    public Map getUserInfo(String code, OAuth2Properties oAuth2Properties) {
+        Map<String, String> tokenInfo = getTokenInfo(code, oAuth2Properties);
         JSONObject userInfoResponse = webClient.mutate()
                 .baseUrl("https://openapi.naver.com/v1/nid/me")
                 .defaultHeader("Authorization", "Bearer " + tokenInfo.get("access_token"))
@@ -90,16 +80,31 @@ public class OAuthService {
         userInfo.put("name", profile.get("name").toString());
         return userInfo;
     }
+    public Map<String, String> getTokenInfo(String code, OAuth2Properties oAuth2Properties){
 
-    public Map<String, String> getTokenInfo(String code, String clientId, String clientSecret){
-        JSONObject tokenResponse = webClient.mutate()
-                .baseUrl("https://nid.naver.com")
+        if (oAuth2Properties.getProviderName().equals("naver")) {
+            tokenResponse = webClient.mutate()
+                    .baseUrl(oAuth2Properties.getTokenRequestApi())
+                    .build()
+                    .get()
+                    .uri(uriBuilder -> uriBuilder.path("/")
+                            .queryParam("grant_type", "authorization_code")
+                            .queryParam("client_id", oAuth2Properties.getClientId())
+                            .queryParam("client_secret", oAuth2Properties.getClientSecret())
+                            .queryParam("code", code)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(JSONObject.class)
+                    .block();
+        }
+        tokenResponse = webClient.mutate()
+                .baseUrl(oAuth2Properties.getTokenRequestApi())
                 .build()
-                .get()
-                .uri(uriBuilder -> uriBuilder.path("/oauth2.0/token")
+                .post()
+                .uri(uriBuilder -> uriBuilder.path("/")
                         .queryParam("grant_type", "authorization_code")
-                        .queryParam("client_id", clientId)
-                        .queryParam("client_secret", clientSecret)
+                        .queryParam("client_id", oAuth2Properties.getClientId())
+                        .queryParam("client_secret", oAuth2Properties.getClientSecret())
                         .queryParam("code", code)
                         .build())
                 .retrieve()
@@ -113,6 +118,5 @@ public class OAuthService {
 
         return tokenInfo;
     }
-
 
 }
