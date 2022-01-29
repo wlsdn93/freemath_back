@@ -58,19 +58,23 @@ public class OAuthService {
         return alphanumericState;
     }
 
-    public String[] oAuthLogin(String code, String state) {
+    public Map<String, String> oAuthLogin(String code, String state) {
 
         stateRepository.deleteByValidTimeLessThan(LocalDateTime.now());
         log.info("delete expired authenticationState has called");
         AuthenticationState authenticationState = stateRepository.findByState(state);
         log.info("state valid process has called");
         if (authenticationState == null) {
-            String[] response = {ERROR_REDIRECT_URL, ERROR_CODE};
-            return response;
+            Map<String, String> response = new HashMap<>();
+            response.put("redirectUri", LOGIN_SUCCESS_REDIRECT_URL);
+            response.put("errorCode", ERROR_CODE);
         }
         Map<String, String> userInfo = getUserInfo(code);
         String jwt = getJwt(userInfo);
-        String[] response = {LOGIN_SUCCESS_REDIRECT_URL, jwt};
+        Map<String, String> response = new HashMap<>();
+        response.put("jwt", jwt);
+        response.put("redirectUri", LOGIN_SUCCESS_REDIRECT_URL);
+
         // return JWT
         log.info("{}", userInfo);
         return response;

@@ -2,6 +2,7 @@ package com.math.weakness.oauth.controller;
 
 
 import com.math.weakness.oauth.service.OAuthService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +29,10 @@ public class LoginController {
     @GetMapping
     private ResponseEntity<String> oAuthLogin(@RequestParam String code,
             @RequestParam String state) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
 
-            String[] response = oAuthService.oAuthLogin(code, state);
-            return new ResponseEntity(response, new HttpHeaders(), HttpStatus.OK);
+        Map<String, String> response = oAuthService.oAuthLogin(code, state);
+        return new ResponseEntity(response, headers, HttpStatus.OK);
     }
-
-
 }
