@@ -29,8 +29,8 @@ public class LoginController {
     private ResponseEntity<String> oAuthLogin(@RequestParam String code,
             @RequestParam String state) {
 
-            String redirectUri = oAuthService.oAuthLogin(code, state);
-            return new ResponseEntity(redirectUri, new HttpHeaders(), HttpStatus.OK);
+            String[] response = oAuthService.oAuthLogin(code, state);
+            return new ResponseEntity(response, new HttpHeaders(), HttpStatus.OK);
     }
 
 

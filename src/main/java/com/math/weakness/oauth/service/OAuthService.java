@@ -9,7 +9,6 @@ import com.math.weakness.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +25,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class OAuthService {
 
     private final WebClient webClient;
+    private final JwtService jwtService;
     private final AuthenticationStateRepository stateRepository;
     private final UserRepository userRepository;
     private JSONObject tokenResponse;
-
+    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://localhost:8081";
+    private final String ERROR_REDIRECT_URL = "http://localhost:8081/login?error=request_not_found";
+    private String ERROR_CODE;
     @Value("${oauth2.client.naver.client-id}")
     private String NAVER_CLIENT_ID;
     @Value("${oauth2.client.naver.client-secret}")
@@ -56,23 +58,27 @@ public class OAuthService {
         return alphanumericState;
     }
 
-    public String oAuthLogin(String code, String state) {
+    public String[] oAuthLogin(String code, String state) {
 
         stateRepository.deleteByValidTimeLessThan(LocalDateTime.now());
         log.info("delete expired authenticationState has called");
         AuthenticationState authenticationState = stateRepository.findByState(state);
         log.info("state valid process has called");
         if (authenticationState == null) {
-            return "http://localhost:8081/login?error=request_not_found";
+            String[] response = {ERROR_REDIRECT_URL, ERROR_CODE};
+            return response;
         }
-
         Map<String, String> userInfo = getUserInfo(code);
-
-        saveOrUpdate(userInfo);
-
+        String jwt = getJwt(userInfo);
+        String[] response = {LOGIN_SUCCESS_REDIRECT_URL, jwt};
         // return JWT
         log.info("{}", userInfo);
-        return "http://localhost:8081";
+        return response;
+    }
+
+    private String getJwt(Map<String, String> userInfo) {
+        User user = saveOrUpdate(userInfo);
+        return jwtService.generateJwt(user.getName(), user.getRole());
     }
 
     private User saveOrUpdate(Map<String, String> userInfo) {
@@ -84,7 +90,7 @@ public class OAuthService {
                                     .platform(Platform.NAVER)
                                     .build());
         log.info("saveOrUpdate method has called");
-        return userRepository.save(user);
+        return user;
     }
 
     private Map getUserInfo(String code) {
