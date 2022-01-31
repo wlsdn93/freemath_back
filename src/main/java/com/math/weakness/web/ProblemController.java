@@ -33,10 +33,11 @@ public class ProblemController {
     public PageResponse problems(
             @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) Integer difficulty,
+            @RequestParam(required = false) String accessToken,
             @PageableDefault Pageable pageable
             ) {
         return problemService.showAllProblems(
-                pageable, difficulty, status
+                accessToken, pageable, difficulty, status
         );
     }
 
