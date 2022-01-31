@@ -18,13 +18,14 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateJwt(String name, Role role) {
+    public String generateJwt(String name, String email, Role role) {
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()))
                 .claim("name", name)
+                .claim("email", email)
                 .claim("role", role)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
@@ -37,6 +38,5 @@ public class JwtService {
                 .parseClaimsJws(jwt)
                 .getBody();
     }
-
 
 }

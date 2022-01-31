@@ -82,7 +82,7 @@ public class OAuthService {
 
     private String getJwt(Map<String, String> userInfo) {
         User user = saveOrUpdate(userInfo);
-        return jwtService.generateJwt(user.getName(), user.getRole());
+        return jwtService.generateJwt(user.getName(), user.getEmail(), user.getRole());
     }
 
     private User saveOrUpdate(Map<String, String> userInfo) {
