@@ -14,7 +14,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class TokenValidationFilter implements Filter {
 
@@ -27,6 +29,7 @@ public class TokenValidationFilter implements Filter {
             Claims claims = jwtService.parseJwt(request.getParameter("accessToken"));
             String name = claims.get("name").toString();
         } catch (ExpiredJwtException e) {
+            log.info("ExpiredJwtException is caught by TokenValidationFilter");
             ((HttpServletResponse) response).sendError(401, "This token has been expired");
         } catch (SignatureException e) {
             ((HttpServletResponse) response).sendError(401, "This token has been forged");

@@ -18,7 +18,7 @@ public class FilterConfig {
     public FilterRegistrationBean<TokenValidationFilter> isValidToken() {
         FilterRegistrationBean<TokenValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new TokenValidationFilter(jwtService));
-        registrationBean.addUrlPatterns("/**");
+        registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         registrationBean.setName("TokenValidationFilter");
         return registrationBean;
