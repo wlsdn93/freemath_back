@@ -29,7 +29,7 @@ public class FilterConfig {
     public FilterRegistrationBean<TokenValidationFilter> isValidToken() {
         FilterRegistrationBean<TokenValidationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new TokenValidationFilter(jwtService));
-        registrationBean.addUrlPatterns("/user/*");
+        registrationBean.addUrlPatterns("/user/*", "/admin/*");
         registrationBean.setOrder(2);
         registrationBean.setName("TokenValidationFilter");
         return registrationBean;

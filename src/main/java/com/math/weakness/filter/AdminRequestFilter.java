@@ -22,12 +22,13 @@ public class AdminRequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        HttpServletResponse res = (HttpServletResponse) response;
         Claims claims = jwtService.parseJwt(request.getParameter("accessToken"));
         String role = claims.get("role").toString();
         try {
             role.equals(Role.ADMIN.toString());
         } catch (Exception e) {
-            ((HttpServletResponse) response).sendError(400, "You are not admin");
+            res.sendError(401, "You are not admin");
         }
         chain.doFilter(request, response);
     }
