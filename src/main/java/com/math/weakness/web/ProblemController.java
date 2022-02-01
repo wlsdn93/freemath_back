@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/problems")
+@RequestMapping("/user/problems")
 public class ProblemController {
 
     private final ProblemService problemService;
@@ -48,7 +48,7 @@ public class ProblemController {
 
 
     @GetMapping("/{problemId}")
-    public String showProblem(@PathVariable long problemId, Model model) {
+    public String showProblemDetail(@PathVariable long problemId, Model model) {
         ProblemResponseDto problemResponseDto = problemService.findById(problemId);
         String problemFilePath = fileDir + problemResponseDto.getProblemImageName();
         model.addAttribute("problemFilePath", problemFilePath);
