@@ -34,14 +34,13 @@ public class TokenValidationFilter implements Filter {
                 Claims claims = jwtService.parseJwt(accessToken);
                 log.info("{} request", claims.get("name"));
             }
+            chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            log.info("ExpiredJwtException is caught by TokenValidationFilter");
             res.sendError(401, "This token has been expired");
         } catch (SignatureException e) {
             res.sendError(401, "This token has been forged");
         } catch (JwtException e) {
             res.sendError(401, "An error occurred for some reason");
         }
-        chain.doFilter(request, response);
     }
 }
