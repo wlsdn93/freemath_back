@@ -36,7 +36,7 @@ public class ProblemController {
             @RequestParam(required = false) String accessToken,
             @PageableDefault Pageable pageable
             ) {
-        return problemService.showAllProblems(
+        return problemService.showAllProblemsForUser(
                 accessToken, pageable, difficulty, status
         );
     }

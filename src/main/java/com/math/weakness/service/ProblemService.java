@@ -65,22 +65,31 @@ public class ProblemService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse showAllProblems(
+    public PageResponse showAllProblemsForUser(
             String accessToken,
             Pageable pageable,
             Integer difficulty,
             Boolean status
     ) {
-        if (accessToken != null) {
-            Claims claims = jwtService.parseJwt(accessToken);
-            if (claims.getExpiration().compareTo(new Date()) > 0) {
+        Claims claims = jwtService.parseJwt(accessToken);
+        if (claims.getExpiration().compareTo(new Date()) > 0) {
                 String email = claims.get("email").toString();
                 Long id = userService.findByEmail(email);
                 return new PageResponse(problemRepository
                         .findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
             }
-        }
+         return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse showAllProblemsForGuest(
+            Pageable pageable,
+            Integer difficulty,
+            Boolean status
+    ) {
+
         return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
+
     }
 
     public Long problemUpdate(Long id, ProblemRequestDto params) {
