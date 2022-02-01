@@ -25,16 +25,19 @@ public class TokenValidationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        HttpServletResponse res = (HttpServletResponse) response;
         try {
             Claims claims = jwtService.parseJwt(request.getParameter("accessToken"));
             String name = claims.get("name").toString();
+        } catch (IllegalArgumentException e) {
+            chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             log.info("ExpiredJwtException is caught by TokenValidationFilter");
-            ((HttpServletResponse) response).sendError(401, "This token has been expired");
+            res.sendError(401, "This token has been expired");
         } catch (SignatureException e) {
-            ((HttpServletResponse) response).sendError(401, "This token has been forged");
+            res.sendError(401, "This token has been forged");
         } catch (JwtException e) {
-            ((HttpServletResponse) response).sendError(401, "An error occurred for some reason");
+            res.sendError(401, "An error occurred for some reason");
         }
     }
 }
