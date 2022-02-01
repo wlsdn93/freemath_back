@@ -36,11 +36,11 @@ public class TokenValidationFilter implements Filter {
             }
             chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            res.sendError(401, "This token has been expired");
+            res.sendError(403, "This token has been expired");
         } catch (SignatureException e) {
-            res.sendError(401, "This token has been forged");
+            res.sendError(403, "This token has been forged");
         } catch (JwtException e) {
-            res.sendError(401, "An error occurred for some reason");
+            res.sendError(403, "An error occurred for some reason");
         }
     }
 }
