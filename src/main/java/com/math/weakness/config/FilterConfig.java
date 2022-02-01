@@ -25,15 +25,15 @@ public class FilterConfig {
         return registrationBean;
     }
 
-//    @Bean
-//    public FilterRegistrationBean<TokenValidationFilter> isValidToken() {
-//        FilterRegistrationBean<TokenValidationFilter> registrationBean = new FilterRegistrationBean<>();
-//        registrationBean.setFilter(new TokenValidationFilter(jwtService));
-//        registrationBean.addUrlPatterns("/user/*");
-//        registrationBean.setOrder(2);
-//        registrationBean.setName("TokenValidationFilter");
-//        return registrationBean;
-//    }
+    @Bean
+    public FilterRegistrationBean<TokenValidationFilter> isValidToken() {
+        FilterRegistrationBean<TokenValidationFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new TokenValidationFilter(jwtService));
+        registrationBean.addUrlPatterns("/user/*");
+        registrationBean.setOrder(2);
+        registrationBean.setName("TokenValidationFilter");
+        return registrationBean;
+    }
 
     @Bean
     public FilterRegistrationBean<AdminRequestFilter> isAdmin() {
