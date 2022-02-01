@@ -29,5 +29,6 @@ public class AdminRequestFilter implements Filter {
         } catch (Exception e) {
             ((HttpServletResponse) response).sendError(400, "You are not admin");
         }
+        chain.doFilter(request, response);
     }
 }

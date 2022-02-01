@@ -2,12 +2,14 @@ package com.math.weakness.filter;
 
 
 import com.math.weakness.oauth.service.JwtService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +24,16 @@ public class TokenValidationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException {
+            throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         try {
-            jwtService.parseJwt(request.getParameter("accessToken"));
+            String accessToken = request.getParameter("accessToken");
+            if (accessToken.equals("guest")) {
+                log.info("guest request");
+            } else {
+                Claims claims = jwtService.parseJwt(accessToken);
+                log.info("{} request", claims.get("name"));
+            }
         } catch (ExpiredJwtException e) {
             log.info("ExpiredJwtException is caught by TokenValidationFilter");
             res.sendError(401, "This token has been expired");
@@ -34,5 +42,6 @@ public class TokenValidationFilter implements Filter {
         } catch (JwtException e) {
             res.sendError(401, "An error occurred for some reason");
         }
+        chain.doFilter(request, response);
     }
 }

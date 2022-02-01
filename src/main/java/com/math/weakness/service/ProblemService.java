@@ -71,15 +71,15 @@ public class ProblemService {
             Integer difficulty,
             Boolean status
     ) {
+        if (accessToken.equals("guest")) {
+            return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
+        }
         Claims claims = jwtService.parseJwt(accessToken);
-        if (claims.getExpiration().compareTo(new Date()) > 0) {
-                String email = claims.get("email").toString();
-                Long id = userService.findByEmail(email);
-                return new PageResponse(problemRepository
-                        .findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
-            }
-         return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
-    }
+        String email = claims.get("email").toString();
+        Long id = userService.findByEmail(email);
+        return new PageResponse(problemRepository
+                .findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
+   }
 
     @Transactional(readOnly = true)
     public PageResponse showAllProblemsForGuest(
