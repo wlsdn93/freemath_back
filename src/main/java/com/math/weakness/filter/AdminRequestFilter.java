@@ -25,11 +25,11 @@ public class AdminRequestFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         Claims claims = jwtService.parseJwt(request.getParameter("accessToken"));
         String role = claims.get("role").toString();
-        try {
-            role.equals(Role.ADMIN.toString());
-        } catch (Exception e) {
+
+        if (role.equals(Role.ADMIN.toString())) {
+           chain.doFilter(request, response);
+        } else {
             res.sendError(401, "You are not admin");
         }
-        chain.doFilter(request, response);
     }
 }
