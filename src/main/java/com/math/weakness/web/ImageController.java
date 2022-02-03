@@ -16,9 +16,6 @@ public class ImageController {
     @Value("${file.dir}")
     private String fileDir;
 
-
-
-    @CrossOrigin
     @GetMapping("/kakaoBtnImage")
     public ResponseEntity<Resource> kakaoBtn() {
         String problemFilePath = fileDir + "kakao_btn.png";
@@ -27,7 +24,7 @@ public class ImageController {
         header.add("Content-Type", "image/png");
         return new ResponseEntity<>(resource, header, HttpStatus.OK);
     }
-    @CrossOrigin
+
     @GetMapping("/naverBtnImage")
     public ResponseEntity<Resource> naverBtn() {
         String problemFilePath = fileDir + "naver_btn.png";
@@ -36,6 +33,4 @@ public class ImageController {
         header.add("Content-Type", "image/png");
         return new ResponseEntity<>(resource, header, HttpStatus.OK);
     }
-
-
 }
