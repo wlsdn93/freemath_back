@@ -90,15 +90,15 @@ class ProblemServiceTest {
     @Test
     @Rollback(value = false)
     void saveResult() {
-        Long userId = 1001L;
-        String[] answer = {"answer1", "answer2"};
-        for (long problemId = 21L; problemId <= 50 ; problemId++) {
-            problemService.saveResult(UserProblemDto.builder()
-                    .problemId(problemId)
-                    .userId(userId)
-                    .answer(answer[new Random().nextInt(answer.length)])
-                    .build());
-        }
+//        Long userId = 1001L;
+//        String[] answer = {"answer1", "answer2"};
+//        for (long problemId = 21L; problemId <= 50 ; problemId++) {
+//            problemService.saveResult(UserProblemDto.builder()
+//                    .problemId(problemId)
+//                    .userId(userId)
+//                    .answer(answer[new Random().nextInt(answer.length)])
+//                    .build());
+//        }
 
     }
 }
