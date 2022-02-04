@@ -2,15 +2,14 @@ package com.math.weakness.service;
 
 import com.math.weakness.domain.Problem;
 import com.math.weakness.domain.UserProblem;
+import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.oauth.service.JwtService;
 import com.math.weakness.repository.ProblemRepository;
 import com.math.weakness.repository.UserProblemRepository;
 import io.jsonwebtoken.Claims;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,6 @@ import javax.servlet.http.HttpSession;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
-    private final HttpSession httpSession;
     private final UserService userService;
     private final UserProblemRepository userProblemRepository;
     private final JwtService jwtService;
@@ -48,8 +46,8 @@ public class ProblemService {
                 .build());
     }
 
-    public Long addProblem(ProblemRequestDto params) {
-        return problemRepository.save(params.toEntity())
+    public Long addProblem(Form form) {
+        return problemRepository.save(form.toEntity())
                 .getProblemId();
     }
 
@@ -80,24 +78,5 @@ public class ProblemService {
         return new PageResponse(problemRepository
                 .findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
    }
-
-    @Transactional(readOnly = true)
-    public PageResponse showAllProblemsForGuest(
-            Pageable pageable,
-            Integer difficulty,
-            Boolean status
-    ) {
-
-        return new PageResponse(problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
-
-    }
-
-    public Long problemUpdate(Long id, ProblemRequestDto params) {
-        problemRepository.findById(id)
-                .orElseThrow()
-                .update(params.getTitle(), params.getAnswer(), params.getAuthor());
-
-        return id;
-    }
 
 }

@@ -1,11 +1,9 @@
 package com.math.weakness.service;
 
 import com.math.weakness.domain.Problem;
-import com.math.weakness.domain.UserProblem;
-import com.math.weakness.dto.ProblemRequestDto;
+import com.math.weakness.dto.Form;
 import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.repository.ProblemRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +31,20 @@ class ProblemServiceTest {
     @DisplayName("문제추가")
     void addProblem() {
         //Given
-        ProblemRequestDto problemRequestDto = ProblemRequestDto.builder()
-                .title("title")
-                .answer("answer")
-                .author("author")
+        Form form = Form.builder()
+                .title("test")
+                .answerType("choice")
+                .answer("3")
                 .difficulty(4)
+                .subject("CommonMath1")
                 .build();
 
         //When
-        Long problemId = problemService.addProblem(problemRequestDto);
+        Long problemId = problemService.addProblem(form);
 
         //Then
         Problem foundProblem = problemRepository.findById(problemId).get();
-        assertThat(problemRequestDto.getTitle()).isEqualTo(foundProblem.getTitle());
+        assertThat(form.getTitle()).isEqualTo(foundProblem.getTitle());
     }
 
     @Test
@@ -53,22 +52,16 @@ class ProblemServiceTest {
     @Rollback(value = false)
     void deleteProblem() {
         //Given
-        ProblemRequestDto problemRequestDto1 = ProblemRequestDto.builder()
-                .title("title1")
-                .answer("answer1")
-                .author("author1")
+        Form form = Form.builder()
+                .title("test")
+                .answerType("choice")
+                .answer("3")
                 .difficulty(4)
-                .build();
-        ProblemRequestDto problemRequestDto2 = ProblemRequestDto.builder()
-                .title("title2")
-                .answer("answer2")
-                .author("author2")
-                .difficulty(3)
+                .subject("CommonMath1")
                 .build();
 
         //When
-        Long problemId1 = problemService.addProblem(problemRequestDto1);
-        Long problemId2 = problemService.addProblem(problemRequestDto2);
+        Long problemId1 = problemService.addProblem(form);
         problemService.deleteProblemById(problemId1);
 
         //Then
@@ -79,18 +72,18 @@ class ProblemServiceTest {
     @Rollback(value = false)
     void testSampleAdd() {
         int[] difficulties = {2, 3, 4};
-        for( int i = 0 ; i < 1000 ; i++) {
+        for( int i = 0 ; i < 10 ; i++) {
             //Given
-            ProblemRequestDto problemRequestDto1 = ProblemRequestDto.builder()
-                    .title("title1")
-                    .answer("answer1")
-                    .author("author1")
+            Form form = Form.builder()
+                    .title("test")
+                    .answerType("choice")
+                    .answer("3")
                     .difficulty(difficulties[new Random().nextInt(difficulties.length)])
+                    .subject("CommonMath1")
                     .build();
 
             //When
-            problemService.addProblem(problemRequestDto1);
-
+            problemService.addProblem(form);
         }
     }
 

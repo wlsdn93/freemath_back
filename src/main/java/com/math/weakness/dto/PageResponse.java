@@ -16,8 +16,8 @@ public class PageResponse {
     private final long page;
     private final long size;
     private final long start, end;
-    private boolean first;
-    private boolean last;
+    private final boolean first;
+    private final boolean last;
     private final List<Integer> pageList;
 
     public PageResponse(Page<ProblemShow> problemList) {

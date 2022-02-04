@@ -1,7 +1,6 @@
 package com.math.weakness.web;
 
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemRequestDto;
 import com.math.weakness.dto.ProblemResponseDto;
 import com.math.weakness.dto.UserProblemDto;
 import com.math.weakness.service.ProblemService;
@@ -12,11 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.File;
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +25,7 @@ public class ProblemController {
     private String fileDir;
 
     @GetMapping
-    public PageResponse problems(
+    public PageResponse getProblems(
             @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) String accessToken,
@@ -76,33 +71,33 @@ public class ProblemController {
         return "redirect:/problems/{problemId}";
     }
 
-    @PostMapping("/add")
-    public String problems(
-            @RequestParam MultipartFile problemImageFile,
-            @RequestParam MultipartFile solutionImageFile,
-            @RequestParam String title,
-            @RequestParam String answer,
-            @RequestParam String difficulty
-    ) throws IOException {
-
-        String problemOriginalName = problemImageFile.getOriginalFilename();
-        String solutionOriginalNane = solutionImageFile.getOriginalFilename();
-        String problemFilePath = fileDir + problemOriginalName;
-        String solutionFilePath = fileDir + solutionOriginalNane;
-
-        ProblemRequestDto requestDto = ProblemRequestDto.builder()
-                .title(title)
-                .difficulty(Integer.parseInt(difficulty))
-                .answer(answer)
-                .problemImageName(problemOriginalName)
-                .solutionImageName(solutionOriginalNane)
-                .build();
-
-        problemService.addProblem(requestDto);
-
-        problemImageFile.transferTo(new File(problemFilePath));
-        solutionImageFile.transferTo(new File(solutionFilePath));
-
-        return "redirect:/problems";
-    }
+//    @PostMapping("/add")
+//    public String problems(
+//            @RequestParam MultipartFile problemImageFile,
+//            @RequestParam MultipartFile solutionImageFile,
+//            @RequestParam String title,
+//            @RequestParam String answer,
+//            @RequestParam String difficulty
+//    ) throws IOException {
+//
+//        String problemOriginalName = problemImageFile.getOriginalFilename();
+//        String solutionOriginalNane = solutionImageFile.getOriginalFilename();
+//        String problemFilePath = fileDir + problemOriginalName;
+//        String solutionFilePath = fileDir + solutionOriginalNane;
+//
+//        ProblemRequestDto requestDto = ProblemRequestDto.builder()
+//                .title(title)
+//                .difficulty(Integer.parseInt(difficulty))
+//                .answer(answer)
+//                .problemImageName(problemOriginalName)
+//                .solutionImageName(solutionOriginalNane)
+//                .build();
+//
+//        problemService.addProblem(requestDto);
+//
+//        problemImageFile.transferTo(new File(problemFilePath));
+//        solutionImageFile.transferTo(new File(solutionFilePath));
+//
+//        return "redirect:/problems";
+//    }
 }
