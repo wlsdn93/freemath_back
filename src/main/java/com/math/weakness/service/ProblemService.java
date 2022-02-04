@@ -11,7 +11,6 @@ import com.math.weakness.repository.ProblemRepository;
 import com.math.weakness.repository.UserProblemRepository;
 import io.jsonwebtoken.Claims;
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -80,7 +79,7 @@ public class ProblemService {
     }
 
     public Long addProblem(Form formData) {
-//        this.storeImage(formData);
+        this.storeImage(formData);
         return problemRepository.save(formData.toEntity())
                 .getProblemId();
     }
