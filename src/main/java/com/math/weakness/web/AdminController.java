@@ -20,9 +20,6 @@ public class AdminController {
 
     private final ProblemService problemService;
 
-    @Value("${file.dir}")
-    private String fileDir;
-
     @PostMapping("/upload")
     public String upload(@ModelAttribute Form formData) {
         problemService.addProblem(formData);
