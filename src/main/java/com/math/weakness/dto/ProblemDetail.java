@@ -3,10 +3,8 @@ package com.math.weakness.dto;
 import com.math.weakness.domain.Problem;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
-public class ProblemResponse {
+public class ProblemDetail {
 
     private final Long problemId;
     private final String title;
@@ -14,9 +12,9 @@ public class ProblemResponse {
     private final String answerType;
     private final String problemImageName;
     private final String solutionImageName;
-    private final String difficulty;
+    private final Integer difficulty;
 
-    private ProblemResponse(Problem entity) {
+    private ProblemDetail(Problem entity) {
         this.problemId = entity.getProblemId();
         this.title = entity.getTitle();
         this.answer = entity.getAnswer();
@@ -26,7 +24,7 @@ public class ProblemResponse {
         this.difficulty = entity.getDifficulty();
     }
 
-    public static ProblemResponse from(Problem entity) {
-        return new ProblemResponse(entity);
+    public static ProblemDetail from(Problem entity) {
+        return new ProblemDetail(entity);
     }
 }

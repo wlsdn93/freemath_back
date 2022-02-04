@@ -49,7 +49,6 @@ class ProblemServiceTest {
 
     @Test
     @DisplayName("문제삭제")
-    @Rollback(value = false)
     void deleteProblem() {
         //Given
         Form form = Form.builder()
@@ -58,14 +57,19 @@ class ProblemServiceTest {
                 .answer("3")
                 .difficulty(4)
                 .subject("CommonMath1")
+                .problemImageName("test")
+                .solutionImageName("test")
                 .build();
 
         //When
+        int beforeSize = problemRepository.findAll().size();
         Long problemId1 = problemService.addProblem(form);
-        problemService.deleteProblemById(problemId1);
+        System.out.println("after add problem" + problemRepository.findAll().size());
+        problemService.deleteProblem(problemId1);
+        int afterSize = problemRepository.findAll().size();
 
         //Then
-        assertThat(problemRepository.findAll().size()).isEqualTo(1);
+        assertThat(beforeSize).isEqualTo(afterSize);
 
     }
     @Test
