@@ -11,7 +11,7 @@ public class Form {
     private String title;
     private String answerType;
     private String answer;
-    private String difficulty;
+    private Integer difficulty;
     private String subject;
     private String problemImage;
     private String problemImageName;
@@ -19,7 +19,7 @@ public class Form {
     private String solutionImageName;
 
     @Builder
-    public Form(String title, String answerType, String answer, String difficulty,
+    public Form(String title, String answerType, String answer, Integer difficulty,
             String subject, String problemImageName,
             String solutionImageName) {
         this.title = title;

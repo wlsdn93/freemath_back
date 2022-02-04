@@ -24,11 +24,6 @@ spring:
   profiles:
     active: oauth
 
-  session:
-    store-type: jdbc
-    jdbc:
-      initialize-schema: always
-
 logging:
   level:
     org:
