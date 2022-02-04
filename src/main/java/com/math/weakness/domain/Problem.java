@@ -30,7 +30,7 @@ public class Problem {
     private String answer;
 
     @Column(name = "DIFFICULTY")
-    private String difficulty;
+    private Integer difficulty;
 
     @Column(name = "SUBJECT")
     private String subject;
@@ -58,7 +58,7 @@ public class Problem {
     private List<ProblemTag> problemTags = new ArrayList<>();
 
     @Builder
-    public Problem(String title, String answerType, String answer, String difficulty,
+    public Problem(String title, String answerType, String answer, Integer difficulty,
             String subject, String problemImageName, String solutionImageName) {
         this.title = title;
         this.answerType = answerType;

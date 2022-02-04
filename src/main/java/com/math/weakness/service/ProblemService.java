@@ -5,18 +5,17 @@ import com.math.weakness.domain.User;
 import com.math.weakness.domain.UserProblem;
 import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemResponse;
-import com.math.weakness.dto.UserProblemDto;
+import com.math.weakness.dto.ProblemDetail;
 import com.math.weakness.oauth.service.JwtService;
 import com.math.weakness.repository.ProblemRepository;
 import com.math.weakness.repository.UserProblemRepository;
 import io.jsonwebtoken.Claims;
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
-import javax.swing.plaf.PanelUI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,13 +56,13 @@ public class ProblemService {
     }
 
     public Resource getProblemImage(Long problemId) {
-        ProblemResponse problemResponseDto = this.findById(problemId);
+        ProblemDetail problemResponseDto = this.findById(problemId);
         String problemImagePath = fileDir + problemResponseDto.getProblemImageName();
         return new FileSystemResource(problemImagePath);
     }
 
     public Resource getSolutionImage(Long problemId) {
-        ProblemResponse problemResponseDto = this.findById(problemId);
+        ProblemDetail problemResponseDto = this.findById(problemId);
         String solutionImagePath = fileDir + problemResponseDto.getSolutionImageName();
         return new FileSystemResource(solutionImagePath);
     }
@@ -81,7 +80,7 @@ public class ProblemService {
     }
 
     public Long addProblem(Form formData) {
-        this.storeImage(formData);
+//        this.storeImage(formData);
         return problemRepository.save(formData.toEntity())
                 .getProblemId();
     }
@@ -107,14 +106,14 @@ public class ProblemService {
         }
     }
 
-    public void deleteProblemById(Long id) {
+    public void deleteProblem(Long id) {
         problemRepository.deleteById(id);
     }
 
-    public ProblemResponse findById(Long id) {
+    public ProblemDetail findById(Long id) {
         Problem foundProblem = problemRepository.findById(id)
                 .orElseThrow();
-        return ProblemResponse.from(foundProblem);
+        return ProblemDetail.from(foundProblem);
     }
 
     private Long getUserId(String accessToken) {
