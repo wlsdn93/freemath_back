@@ -82,7 +82,6 @@ public class ProblemService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
     }
 
     public void deleteProblemById(Long id) {
