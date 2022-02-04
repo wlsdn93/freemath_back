@@ -16,15 +16,24 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Problem {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROBLEM_ID")
     private Long problemId;
 
     @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "ANSWER_TYPE")
+    private String answerType;
+
     @Column(name = "ANSWER")
     private String answer;
+
+    @Column(name = "DIFFICULTY")
+    private Integer difficulty;
+
+    @Column(name = "SUBJECT")
+    private String subject;
 
     @Column(name = "PROBLEM_IMAGE_NAME")
     private String problemImageName;
@@ -32,14 +41,8 @@ public class Problem {
     @Column(name = "SOLUTION_IMAGE_NAME")
     private String solutionImageName;
 
-    @Column(name = "DIFFICULTY")
-    private Integer difficulty;
-
-    @Column(name = "AUTHOR", nullable = true)
-    private String author;
-
     @Column(name = "CREATED_DATE")
-    private LocalDateTime createdDate = LocalDateTime.now();
+    private final LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "MODIFIED_DATE")
     private LocalDateTime modifiedDate;
@@ -55,20 +58,21 @@ public class Problem {
     private List<ProblemTag> problemTags = new ArrayList<>();
 
     @Builder
-    private Problem(String title, String answer, String problemImageName,
-                   String solutionImageName, Integer difficulty, String author) {
+    public Problem(String title, String answerType, String answer, Integer difficulty,
+            String subject, String problemImageName, String solutionImageName) {
         this.title = title;
+        this.answerType = answerType;
         this.answer = answer;
+        this.difficulty = difficulty;
+        this.subject = subject;
         this.problemImageName = problemImageName;
         this.solutionImageName = solutionImageName;
-        this.difficulty = difficulty;
-        this.author = author;
     }
 
-    public void update(String title, String answer, String author) {
+    public void update(String title, String answer, String subject) {
         this.title = title;
         this.answer = answer;
-        this.author = author;
+        this.subject = subject;
         this.modifiedDate = LocalDateTime.now();
     }
 }
