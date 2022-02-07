@@ -3,6 +3,7 @@ package com.math.weakness.service;
 import com.math.weakness.domain.Problem;
 import com.math.weakness.domain.User;
 import com.math.weakness.domain.UserProblem;
+import com.math.weakness.domain.UserProblemId;
 import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
 import com.math.weakness.dto.ProblemDetail;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,38 +45,48 @@ public class ProblemService {
             String accessToken,
             Pageable pageable,
             Integer difficulty,
+            String subject,
             Boolean status
     ) {
         if (accessToken.equals("guest")) {
             return new PageResponse(
-                    problemRepository.findByDifficultyAndStatus(pageable, difficulty, status));
+                    problemRepository.findByDifficultyAndStatus(pageable, difficulty, status, subject));
         }
         Long id = this.getUserId(accessToken);
         return new PageResponse(problemRepository
-                .findByDifficultyAndStatusAndId(id, pageable, difficulty, status));
+                .findByDifficultyAndStatusAndId(id, pageable, difficulty, status, subject));
     }
 
     public Resource getProblemImage(Long problemId) {
-        ProblemDetail problemResponseDto = this.findById(problemId);
-        String problemImagePath = fileDir + problemResponseDto.getProblemImageName();
+        ProblemDetail problemDetail = this.findById(problemId);
+        String problemImagePath = fileDir + problemDetail.getProblemImageName();
         return new FileSystemResource(problemImagePath);
     }
 
     public Resource getSolutionImage(Long problemId) {
-        ProblemDetail problemResponseDto = this.findById(problemId);
-        String solutionImagePath = fileDir + problemResponseDto.getSolutionImageName();
+        ProblemDetail problemDetail = this.findById(problemId);
+        String solutionImagePath = fileDir + problemDetail.getSolutionImageName();
         return new FileSystemResource(solutionImagePath);
     }
 
-    public boolean saveResult(Long problemId, String answer, String accessToken) {
+    public boolean saveOrUpdateResult(Long problemId, String answer, String accessToken) {
         Problem problem = problemRepository.findById(problemId).orElseThrow();
         User user = userService.findById(this.getUserId(accessToken));
         boolean isCorrect = problem.getAnswer().equals(answer);
-        userProblemRepository.save(UserProblem.builder()
-                .user(user)
-                .problem(problem)
-                .status(isCorrect)
-                .build());
+        UserProblemId userProblemId = new UserProblemId(this.getUserId(accessToken), problemId);
+        try {
+            UserProblem userProblem = userProblemRepository
+                                        .findByUserProblemId(userProblemId)
+                                        .orElseThrow(NullPointerException::new);
+            userProblem.update(isCorrect, answer);
+        } catch (NullPointerException e) {
+            userProblemRepository.save(UserProblem.builder()
+                    .user(user)
+                    .problem(problem)
+                    .status(isCorrect)
+                    .submittedAnswer(answer)
+                    .build());
+        }
         return isCorrect;
     }
 

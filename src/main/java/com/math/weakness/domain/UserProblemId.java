@@ -25,4 +25,9 @@ public class UserProblemId implements Serializable {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+
+    public UserProblemId(Long userId, Long problemId) {
+        this.userId = userId;
+        this.problemId = problemId;
+    }
 }
