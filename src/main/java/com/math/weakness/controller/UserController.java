@@ -1,4 +1,4 @@
-package com.math.weakness.web;
+package com.math.weakness.controller;
 
 import com.math.weakness.dto.PageResponse;
 import com.math.weakness.dto.ProblemDetail;
@@ -23,10 +23,11 @@ public class UserController {
     public PageResponse getProblems(
             @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) Integer difficulty,
+            @RequestParam(required = false) String subject,
             @RequestParam(required = false) String accessToken,
             @PageableDefault Pageable pageable) {
         return problemService.showAllProblemsForUser(
-                accessToken, pageable, difficulty, status
+                accessToken, pageable, difficulty, subject, status
         );
     }
 
@@ -40,7 +41,7 @@ public class UserController {
             @PathVariable Long problemId,
             @RequestParam String answer,
             @RequestParam String accessToken) {
-          boolean result = problemService.saveResult(problemId, answer, accessToken);
+          boolean result = problemService.saveOrUpdateResult(problemId, answer, accessToken);
           return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

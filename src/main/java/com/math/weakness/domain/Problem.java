@@ -69,10 +69,12 @@ public class Problem {
         this.solutionImageName = solutionImageName;
     }
 
-    public void update(String title, String answer, String subject) {
+    public Problem update(String title, String answer, Integer difficulty, String subject) {
         this.title = title;
         this.answer = answer;
+        this.difficulty = difficulty;
         this.subject = subject;
         this.modifiedDate = LocalDateTime.now();
+        return this;
     }
 }

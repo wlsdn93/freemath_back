@@ -1,4 +1,4 @@
-package com.math.weakness.web;
+package com.math.weakness.controller;
 
 import com.math.weakness.dto.Form;
 import com.math.weakness.service.ProblemService;
