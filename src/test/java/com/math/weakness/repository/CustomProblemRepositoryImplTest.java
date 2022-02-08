@@ -21,6 +21,7 @@ class CustomProblemRepositoryImplTest {
         PageRequest pageable = PageRequest.of(1, 10);
         int difficulty = 1;
         boolean status = true;
-        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status);
+        String subject = "commonMath1";
+        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status, subject);
     }
 }

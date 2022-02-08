@@ -28,10 +28,20 @@ public class UserProblem {
     @Column(name = "STATUS")
     private Boolean status;
 
+    @Column(name = "SUBMITTED_ANSWER")
+    private String submittedAnswer;
+
     @Builder
-    private UserProblem(User user, Problem problem, Boolean status) {
+    private UserProblem(User user, Problem problem, Boolean status, String submittedAnswer) {
         this.user = user;
         this.problem = problem;
         this.status = status;
+        this.submittedAnswer = submittedAnswer;
+    }
+
+    public UserProblem update(Boolean status, String submittedAnswer) {
+        this.status = status;
+        this.submittedAnswer = submittedAnswer;
+        return this;
     }
 }

@@ -29,8 +29,7 @@ public class OAuthService {
     private final AuthenticationStateRepository stateRepository;
     private final UserRepository userRepository;
     private JSONObject tokenResponse;
-    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://localhost:8081";
-    private final String ERROR_REDIRECT_URL = "http://localhost:8081/login?error=request_not_found";
+    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://localhost:8081/problems";
     private String ERROR_CODE;
     @Value("${oauth2.client.naver.client-id}")
     private String NAVER_CLIENT_ID;

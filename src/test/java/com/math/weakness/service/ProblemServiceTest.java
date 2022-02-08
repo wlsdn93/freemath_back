@@ -90,6 +90,23 @@ class ProblemServiceTest {
             problemService.addProblem(form);
         }
     }
+    @Test
+    @Rollback(value = false)
+    void testSampleUpdate() {
+        String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
+        for( long i = 0L ; i <= 5000 ; i++) {
+            //Given
+            Long problemId = i;
+            try {
+                Problem problem = problemRepository.findById(problemId).orElseThrow(Exception::new);
+                String subject = subjects[new Random().nextInt(subjects.length)];
+                problem.update(problem.getTitle(), problem.getAnswer(), problem.getDifficulty(), subject);
+            } catch (Exception e) {
+            }
+
+
+        }
+    }
 
     @Test
     @Rollback(value = false)

@@ -27,19 +27,20 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status) {
-        Conditions conditions = Conditions.of(id, pageable, difficulty, status);
+    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status, String subject) {
+        Conditions conditions = Conditions.of(id, pageable, difficulty, status, subject);
         List<ProblemShow> content = this.query(conditions).fetch();
         return PageableExecutionUtils.getPage(content, pageable, this.query(conditions)::fetchCount);
     }
 
     @Override
-    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status) {
+    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status, String subject) {
         List<ProblemShow> queryResult = jpaQueryFactory
                 .select(Projections.fields(ProblemShow.class,
                         problem.problemId,
                         problem.title,
-                        problem.difficulty))
+                        problem.difficulty,
+                        problem.subject))
                 .from(problem)
                 .where(this.isEqProblem(difficulty), this.isEqUserProblem(status))
                 .offset(pageable.getOffset())
@@ -53,7 +54,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.title,
                         problem.difficulty))
                 .from(problem)
-                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status))
+                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status), this.isEqSubject(subject))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc());
@@ -67,7 +68,9 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .from(problem)
                 .leftJoin(userProblem)
                 .on(this.isEqProblemAndUserProblemId().and(this.isEqUserProblem(conditions.getId())))
-                .where(this.isEqProblem(conditions.getDifficulty()), this.isEqUserProblem(conditions.getStatus()))
+                .where(this.isEqProblem(conditions.getDifficulty()),
+                        this.isEqUserProblem(conditions.getStatus()),
+                        this.isEqSubject(conditions.getSubject()))
                 .offset(conditions.getPageable().getOffset())
                 .limit(conditions.getPageable().getPageSize())
                 .orderBy(problem.problemId.desc());
@@ -78,6 +81,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 problem.problemId,
                 problem.title,
                 problem.difficulty,
+                problem.subject,
                 userProblem.status);
     }
 
@@ -87,6 +91,10 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     private BooleanExpression isEqProblem(Integer difficulty) {
         return difficulty == null ? null : problem.difficulty.eq(difficulty);
+    }
+
+    private BooleanExpression isEqSubject(String subject) {
+        return subject == null ? null : problem.subject.eq(subject);
     }
 
     private BooleanExpression isEqUserProblem(Long id) {
@@ -103,5 +111,6 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
         Pageable pageable;
         Integer difficulty;
         Boolean status;
+        String subject;
     }
 }
