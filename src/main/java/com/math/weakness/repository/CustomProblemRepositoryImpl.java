@@ -42,7 +42,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.difficulty,
                         problem.subject))
                 .from(problem)
-                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status))
+                .where(this.isEqProblem(difficulty))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc())
@@ -52,9 +52,10 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .select(Projections.fields(ProblemShow.class,
                         problem.problemId,
                         problem.title,
-                        problem.difficulty))
+                        problem.difficulty,
+                        problem.subject))
                 .from(problem)
-                .where(this.isEqProblem(difficulty), this.isEqUserProblem(status), this.isEqSubject(subject))
+                .where(this.isEqProblem(difficulty))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc());
@@ -67,10 +68,9 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .select(this.fieldProjection())
                 .from(problem)
                 .leftJoin(userProblem)
-                .on(this.isEqProblemAndUserProblemId().and(this.isEqUserProblem(conditions.getId())))
+                .on(this.isEqProblemAndUserProblemId().and(this.isEqUserId(conditions.getId())))
                 .where(this.isEqProblem(conditions.getDifficulty()),
-                        this.isEqUserProblem(conditions.getStatus()),
-                        this.isEqSubject(conditions.getSubject()))
+                        this.isEqUserProblem(conditions.getStatus()))
                 .offset(conditions.getPageable().getOffset())
                 .limit(conditions.getPageable().getPageSize())
                 .orderBy(problem.problemId.desc());
@@ -93,17 +93,19 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
         return difficulty == null ? null : problem.difficulty.eq(difficulty);
     }
 
-    private BooleanExpression isEqSubject(String subject) {
+    private BooleanExpression isEqProblem(String subject) {
         return subject == null ? null : problem.subject.eq(subject);
-    }
-
-    private BooleanExpression isEqUserProblem(Long id) {
-        return userProblem.user.userId.eq(id);
     }
 
     private BooleanExpression isEqUserProblem(Boolean status) {
         return status == null ? null : userProblem.status.eq(status);
     }
+
+
+    private BooleanExpression isEqUserId(Long id) {
+        return userProblem.user.userId.eq(id);
+    }
+
 
     @Value(staticConstructor = "of")
     private static class Conditions {

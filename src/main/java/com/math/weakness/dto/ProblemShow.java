@@ -19,7 +19,7 @@ public class ProblemShow {
         this.problemId = problemId;
         this.title = title;
         this.difficulty = difficulty;
-        this.status = status;
         this.subject = subject;
+        this.status = status;
     }
 }
