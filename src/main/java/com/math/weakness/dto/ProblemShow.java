@@ -11,13 +11,15 @@ public class ProblemShow {
     private Long problemId;
     private String title;
     private Integer difficulty;
+    private String subject;
     private Boolean status;
 
     @Builder
-    private ProblemShow(Long problemId, String title, Integer difficulty, Boolean status) {
+    private ProblemShow(Long problemId, String title, Integer difficulty, String subject, Boolean status) {
         this.problemId = problemId;
         this.title = title;
         this.difficulty = difficulty;
         this.status = status;
+        this.subject = subject;
     }
 }
