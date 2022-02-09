@@ -77,7 +77,7 @@ class ProblemServiceTest {
     void testSampleAdd() {
         int[] difficulties = {2, 3, 4};
         String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 1L ; i <= 1000 ; i++) {
+        for( long i = 1L ; i <= 500 ; i++) {
             String subject = subjects[new Random().nextInt(subjects.length)];
             //Given
             Form form = Form.builder()
