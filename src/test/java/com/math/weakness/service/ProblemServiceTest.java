@@ -94,7 +94,7 @@ class ProblemServiceTest {
     @Rollback(value = false)
     void testSampleUpdate() {
         String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 0L ; i <= 5000 ; i++) {
+        for( long i = 5001L ; i <= 5003 ; i++) {
             //Given
             Long problemId = i;
             try {
@@ -103,8 +103,6 @@ class ProblemServiceTest {
                 problem.update(problem.getTitle(), problem.getAnswer(), problem.getDifficulty(), subject);
             } catch (Exception e) {
             }
-
-
         }
     }
 
