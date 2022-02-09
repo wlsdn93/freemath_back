@@ -76,14 +76,16 @@ class ProblemServiceTest {
     @Rollback(value = false)
     void testSampleAdd() {
         int[] difficulties = {2, 3, 4};
-        for( int i = 0 ; i < 10 ; i++) {
+        String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
+        for( long i = 1L ; i <= 1000 ; i++) {
+            String subject = subjects[new Random().nextInt(subjects.length)];
             //Given
             Form form = Form.builder()
                     .title("test")
                     .answerType("choice")
                     .answer("3")
                     .difficulty(difficulties[new Random().nextInt(difficulties.length)])
-                    .subject("CommonMath1")
+                    .subject(subject)
                     .build();
 
             //When
@@ -94,7 +96,7 @@ class ProblemServiceTest {
     @Rollback(value = false)
     void testSampleUpdate() {
         String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 5001L ; i <= 5003 ; i++) {
+        for( long i = 1L ; i <= 1000 ; i++) {
             //Given
             Long problemId = i;
             try {
