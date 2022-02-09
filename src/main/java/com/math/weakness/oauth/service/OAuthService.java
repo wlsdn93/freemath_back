@@ -9,6 +9,7 @@ import com.math.weakness.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,24 +81,26 @@ public class OAuthService {
     }
 
     private String getJwt(Map<String, String> userInfo) {
-        User user = saveOrUpdate(userInfo);
+        User user = this.saveOrUpdate(userInfo);
         return jwtService.generateJwt(user.getName(), user.getEmail(), user.getRole());
     }
 
     private User saveOrUpdate(Map<String, String> userInfo) {
-        User user = userRepository.findByEmail(userInfo.get("email"))
-                        .orElse(User.builder()
-                                    .name(userInfo.get("name"))
-                                    .email(userInfo.get("email"))
-                                    .role(Role.STUDENT)
-                                    .platform(Platform.NAVER)
-                                    .build());
-        log.info("saveOrUpdate method has called");
-        return user;
+        try {
+            return userRepository.findByEmail(userInfo.get("email"))
+                    .orElseThrow(NoSuchElementException::new);
+        } catch (NoSuchElementException e) {
+            return userRepository.save(User.builder()
+                    .name(userInfo.get("name"))
+                    .email(userInfo.get("email"))
+                    .role(Role.STUDENT)
+                    .platform(Platform.NAVER)
+                    .build());
+        }
     }
 
-    private Map getUserInfo(String code) {
-        Map<String, String> tokenInfo = getTokenInfo(code);
+    private Map<String, String> getUserInfo(String code) {
+        Map<String, String> tokenInfo = this.getTokenInfo(code);
         JSONObject userInfoResponse = webClient.mutate()
                 .baseUrl(NAVER_USERINFO_API)
                 .defaultHeader("Authorization", "Bearer " + tokenInfo.get("access_token"))
@@ -106,7 +109,7 @@ public class OAuthService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-        Map profile = (Map)userInfoResponse.get("response");
+        Map<String, String> profile = (Map)userInfoResponse.get("response");
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("email", profile.get("email").toString());
         userInfo.put("name", profile.get("name").toString());
