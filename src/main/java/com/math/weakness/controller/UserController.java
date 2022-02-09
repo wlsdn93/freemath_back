@@ -21,9 +21,9 @@ public class UserController {
 
     @GetMapping
     public PageResponse getProblems(
-            @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) String subject,
+            @RequestParam(required = false) Boolean status,
             @RequestParam(required = false) String accessToken,
             @PageableDefault Pageable pageable) {
         return problemService.showAllProblemsForUser(

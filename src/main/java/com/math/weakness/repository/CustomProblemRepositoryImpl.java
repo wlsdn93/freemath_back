@@ -42,7 +42,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.difficulty,
                         problem.subject))
                 .from(problem)
-                .where(this.isEqProblem(difficulty))
+                .where(this.isEqProblem(difficulty), this.isEqProblem(subject))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc())
@@ -55,7 +55,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                         problem.difficulty,
                         problem.subject))
                 .from(problem)
-                .where(this.isEqProblem(difficulty))
+                .where(this.isEqProblem(difficulty), this.isEqProblem(subject))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(problem.problemId.desc());
@@ -70,6 +70,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .leftJoin(userProblem)
                 .on(this.isEqProblemAndUserProblemId().and(this.isEqUserId(conditions.getId())))
                 .where(this.isEqProblem(conditions.getDifficulty()),
+                        this.isEqProblem(conditions.getSubject()),
                         this.isEqUserProblem(conditions.getStatus()))
                 .offset(conditions.getPageable().getOffset())
                 .limit(conditions.getPageable().getPageSize())
@@ -94,7 +95,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
     }
 
     private BooleanExpression isEqProblem(String subject) {
-        return subject == null ? null : problem.subject.eq(subject);
+        return subject.isBlank() ? null : problem.subject.eq(subject);
     }
 
     private BooleanExpression isEqUserProblem(Boolean status) {
