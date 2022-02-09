@@ -52,11 +52,6 @@ public class Problem {
             orphanRemoval = true)
     private List<UserProblem> userProblems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "problem",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<ProblemTag> problemTags = new ArrayList<>();
-
     @Builder
     public Problem(String title, String answerType, String answer, Integer difficulty,
             String subject, String problemImageName, String solutionImageName) {
