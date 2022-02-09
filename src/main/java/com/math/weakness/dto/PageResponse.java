@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 public class PageResponse {
 
     private final List<ProblemShow> content;
+    private final long totalContent;
     private final long totalPage;
     private final long page;
     private final long size;
@@ -31,6 +32,7 @@ public class PageResponse {
         this.first = problemList.isFirst();
         this.last = problemList.isLast();
         this.content = problemList.getContent();
+        this.totalContent = problemList.getTotalElements();
         this.totalPage = totalPage;
         this.page = pageNumber + 1;
         this.size = pageSize;

@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,6 +95,16 @@ public class ProblemService {
                 .getProblemId();
     }
 
+    public void deleteProblem(Long id) {
+        problemRepository.deleteById(id);
+    }
+
+    public ProblemDetail findById(Long id) {
+        Problem foundProblem = problemRepository.findById(id)
+                .orElseThrow();
+        return ProblemDetail.from(foundProblem);
+    }
+
     private void storeImage(Form formData) {
         String[] problemString = formData.getProblemImage().split(",");
         String[] solutionString = formData.getSolutionImage().split(",");
@@ -115,16 +124,6 @@ public class ProblemService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void deleteProblem(Long id) {
-        problemRepository.deleteById(id);
-    }
-
-    public ProblemDetail findById(Long id) {
-        Problem foundProblem = problemRepository.findById(id)
-                .orElseThrow();
-        return ProblemDetail.from(foundProblem);
     }
 
     private Long getUserId(String accessToken) {
