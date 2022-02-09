@@ -10,6 +10,7 @@ public class ProblemDetail {
     private final String title;
     private final String answer;
     private final String answerType;
+    private final String subject;
     private final String problemImageName;
     private final String solutionImageName;
     private final Integer difficulty;
@@ -18,6 +19,7 @@ public class ProblemDetail {
         this.problemId = entity.getProblemId();
         this.title = entity.getTitle();
         this.answer = entity.getAnswer();
+        this.subject = entity.getSubject();
         this.answerType = entity.getAnswerType();
         this.problemImageName = entity.getProblemImageName();
         this.solutionImageName = entity.getSolutionImageName();
