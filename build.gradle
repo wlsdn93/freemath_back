@@ -56,7 +56,6 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-thymeleaf',
             'org.springframework.boot:spring-boot-starter-web',
             'org.springframework.boot:spring-boot-starter-webflux',
-            'org.springframework.session:spring-session-jdbc',
             "com.querydsl:querydsl-jpa:${queryDslVersion}",
             "com.querydsl:querydsl-apt:${queryDslVersion}",
             "com.googlecode.json-simple:json-simple:1.1.1",
