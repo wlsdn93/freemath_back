@@ -5,6 +5,7 @@ import com.math.weakness.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,12 @@ public class AdminController {
     @PostMapping("/upload")
     public String uploadProblem(@ModelAttribute Form formData) {
         problemService.addProblem(formData);
+        return "/";
+    }
 
+    @GetMapping("/update/{problemId}")
+    public String getProblemForm(@ModelAttribute Form formData, @PathVariable Long problemId) {
+        problemService.updateProblem(formData, problemId);
         return "/";
     }
 

@@ -6,7 +6,6 @@ import com.math.weakness.domain.UserProblem;
 import com.math.weakness.domain.UserProblemId;
 import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemDetail;
 import com.math.weakness.oauth.service.JwtService;
 import com.math.weakness.repository.ProblemRepository;
 import com.math.weakness.repository.UserProblemRepository;
@@ -57,14 +56,14 @@ public class ProblemService {
     }
 
     public Resource getProblemImage(Long problemId) {
-        ProblemDetail problemDetail = this.findById(problemId);
-        String problemImagePath = fileDir + problemDetail.getProblemImageName();
+        Problem problem = problemRepository.findById(problemId).orElseThrow();
+        String problemImagePath = fileDir + problem.getProblemImageName();
         return new FileSystemResource(problemImagePath);
     }
 
     public Resource getSolutionImage(Long problemId) {
-        ProblemDetail problemDetail = this.findById(problemId);
-        String solutionImagePath = fileDir + problemDetail.getSolutionImageName();
+        Problem problem = problemRepository.findById(problemId).orElseThrow();
+        String solutionImagePath = fileDir + problem.getSolutionImageName();
         return new FileSystemResource(solutionImagePath);
     }
 
@@ -95,15 +94,22 @@ public class ProblemService {
                 .getProblemId();
     }
 
+    public void updateProblem(Form formData, Long problemId) {
+        Problem problem = problemRepository.findById(problemId).get();
+        problem.update(formData);
+        this.storeImage(formData);
+    }
+
     public void deleteProblem(Long id) {
         problemRepository.deleteById(id);
     }
 
-    public ProblemDetail findById(Long id) {
+    public Form findById(Long id) {
         Problem foundProblem = problemRepository.findById(id)
                 .orElseThrow();
-        return ProblemDetail.from(foundProblem);
+        return Form.from(foundProblem);
     }
+
 
     private void storeImage(Form formData) {
         String[] problemString = formData.getProblemImage().split(",");
@@ -112,7 +118,7 @@ public class ProblemService {
         String solutionImagePath = fileDir + formData.getSolutionImageName();
 
         byte[] problemByte = Base64.getDecoder().decode(problemString[1]);
-        byte[] solutionByre = Base64.getDecoder().decode(solutionString[1]);
+        byte[] solutionByte = Base64.getDecoder().decode(solutionString[1]);
 
         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(problemImagePath))) {
             outputStream.write(problemByte);
@@ -120,7 +126,7 @@ public class ProblemService {
             e.printStackTrace();
         }
         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(solutionImagePath))) {
-            outputStream.write(solutionByre);
+            outputStream.write(solutionByte);
         } catch (IOException e) {
             e.printStackTrace();
         }
