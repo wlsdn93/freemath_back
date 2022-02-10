@@ -102,11 +102,9 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
         return status == null ? null : userProblem.status.eq(status);
     }
 
-
     private BooleanExpression isEqUserId(Long id) {
         return userProblem.user.userId.eq(id);
     }
-
 
     @Value(staticConstructor = "of")
     private static class Conditions {
