@@ -12,16 +12,16 @@ import org.springframework.data.domain.PageRequest;
 @DataJpaTest
 @Import(QuerydslConfig.class)
 class CustomProblemRepositoryImplTest {
-    @Autowired
-    CustomProblemRepositoryImpl repository;
-
-    @Test
-    void searchProblemsWithStatus() {
-        Long id = 1L;
-        PageRequest pageable = PageRequest.of(1, 10);
-        int difficulty = 1;
-        boolean status = true;
-        String subject = "commonMath1";
-        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status, subject);
-    }
+//    @Autowired
+//    CustomProblemRepositoryImpl repository;
+//
+//    @Test
+//    void searchProblemsWithStatus() {
+//        Long id = 1L;
+//        PageRequest pageable = PageRequest.of(1, 10);
+//        int difficulty = 1;
+//        boolean status = true;
+//        String subject = "commonMath1";
+//        Page<ProblemShow> problemShows = repository.findByDifficultyAndStatusAndId(id, pageable, difficulty, status, subject);
+//    }
 }

@@ -23,7 +23,7 @@ public class JwtService {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()))
+                .setExpiration(new Date(now.getTime() + Duration.ofMinutes(90).toMillis()))
                 .claim("name", name)
                 .claim("email", email)
                 .claim("role", role)
