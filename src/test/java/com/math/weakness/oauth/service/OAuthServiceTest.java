@@ -15,34 +15,34 @@ import org.springframework.test.annotation.Rollback;
 @Transactional
 class OAuthServiceTest {
 
-    @Autowired
-    AuthenticationStateRepository repository;
-
-    @Value("${oauth2.client.naver.client-id}")
-    private String naverClientId;
-    @Value("${oauth2.client.naver.client-secret}")
-    private String naverClientSecret;
-
-    @Test
-    void propertyTest() {
-        System.out.println(naverClientId);
-        System.out.println(naverClientSecret);
-    }
-
-    @Test
-    @Rollback(value = false)
-    void saveTest() {
-        repository.save(new AuthenticationState("123123"));
-        AuthenticationState foundState = repository.findByState("123123");
-        AuthenticationState notExistState = repository.findByState("123143");
-        System.out.println(foundState.getState());
-        System.out.println(notExistState);
-    }
-
-    @Test
-    @Rollback(value = false)
-    void deleteTest() {
-        repository.deleteByValidTimeLessThan(LocalDateTime.now());
-        System.out.println(repository.findAll().size());
-    }
+//    @Autowired
+//    AuthenticationStateRepository repository;
+//
+//    @Value("${oauth2.client.naver.client-id}")
+//    private String naverClientId;
+//    @Value("${oauth2.client.naver.client-secret}")
+//    private String naverClientSecret;
+//
+//    @Test
+//    void propertyTest() {
+//        System.out.println(naverClientId);
+//        System.out.println(naverClientSecret);
+//    }
+//
+//    @Test
+//    @Rollback(value = false)
+//    void saveTest() {
+//        repository.save(new AuthenticationState("123123"));
+//        AuthenticationState foundState = repository.findByState("123123");
+//        AuthenticationState notExistState = repository.findByState("123143");
+//        System.out.println(foundState.getState());
+//        System.out.println(notExistState);
+//    }
+//
+//    @Test
+//    @Rollback(value = false)
+//    void deleteTest() {
+//        repository.deleteByValidTimeLessThan(LocalDateTime.now());
+//        System.out.println(repository.findAll().size());
+//    }
 }

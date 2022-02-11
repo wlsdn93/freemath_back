@@ -30,67 +30,67 @@ class ProblemServiceTest {
     @Test
     @DisplayName("문제추가")
     void addProblem() {
-        //Given
-        Form form = Form.builder()
-                .title("test")
-                .answerType("choice")
-                .answer("3")
-                .difficulty(4)
-                .subject("CommonMath1")
-                .build();
-
-        //When
-        Long problemId = problemService.addProblem(form);
-
-        //Then
-        Problem foundProblem = problemRepository.findById(problemId).get();
-        assertThat(form.getTitle()).isEqualTo(foundProblem.getTitle());
+//        //Given
+//        Form form = Form.builder()
+//                .title("test")
+//                .answerType("choice")
+//                .answer("3")
+//                .difficulty(4)
+//                .subject("CommonMath1")
+//                .build();
+//
+//        //When
+//        Long problemId = problemService.addProblem(form);
+//
+//        //Then
+//        Problem foundProblem = problemRepository.findById(problemId).get();
+//        assertThat(form.getTitle()).isEqualTo(foundProblem.getTitle());
     }
 
     @Test
     @DisplayName("문제삭제")
     void deleteProblem() {
-        //Given
-        Form form = Form.builder()
-                .title("test")
-                .answerType("choice")
-                .answer("3")
-                .difficulty(4)
-                .subject("CommonMath1")
-                .problemImageName("test")
-                .solutionImageName("test")
-                .build();
-
-        //When
-        int beforeSize = problemRepository.findAll().size();
-        Long problemId1 = problemService.addProblem(form);
-        System.out.println("after add problem" + problemRepository.findAll().size());
-        problemService.deleteProblem(problemId1);
-        int afterSize = problemRepository.findAll().size();
-
-        //Then
-        assertThat(beforeSize).isEqualTo(afterSize);
+//        //Given
+//        Form form = Form.builder()
+//                .title("test")
+//                .answerType("choice")
+//                .answer("3")
+//                .difficulty(4)
+//                .subject("CommonMath1")
+//                .problemImageName("test")
+//                .solutionImageName("test")
+//                .build();
+//
+//        //When
+//        int beforeSize = problemRepository.findAll().size();
+//        Long problemId1 = problemService.addProblem(form);
+//        System.out.println("after add problem" + problemRepository.findAll().size());
+//        problemService.deleteProblem(problemId1);
+//        int afterSize = problemRepository.findAll().size();
+//
+//        //Then
+//        assertThat(beforeSize).isEqualTo(afterSize);
 
     }
     @Test
     @Rollback(value = false)
     void testSampleAdd() {
-        int[] difficulties = {2, 3, 4};
-        String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 1L ; i <= 500 ; i++) {
-            String subject = subjects[new Random().nextInt(subjects.length)];
-            //Given
-            Form form = Form.builder()
-                    .title("test")
-                    .answerType("choice")
-                    .answer("3")
-                    .difficulty(difficulties[new Random().nextInt(difficulties.length)])
-                    .subject(subject)
-                    .build();
-
-            //When
-            problemService.addProblem(form);
-        }
+//        int[] difficulties = {2, 3, 4};
+//        String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
+//        for( long i = 1L ; i <= 500 ; i++) {
+//            String subject = subjects[new Random().nextInt(subjects.length)];
+//            //Given
+//            Form form = Form.builder()
+//                    .title("test")
+//                    .answerType("choice")
+//                    .answer("3")
+//                    .difficulty(difficulties[new Random().nextInt(difficulties.length)])
+//                    .subject(subject)
+//                    .build();
+//
+//            //When
+//            problemService.addProblem(form);
+//        }
     }
 
     @Test
