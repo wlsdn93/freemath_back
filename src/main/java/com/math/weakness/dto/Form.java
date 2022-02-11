@@ -31,6 +31,18 @@ public class Form {
         this.solutionImageName = solutionImageName;
     }
 
+    public static Form from(Problem problem) {
+        return Form.builder()
+                .title(problem.getTitle())
+                .answerType(problem.getAnswerType())
+                .answer(problem.getAnswer())
+                .difficulty(problem.getDifficulty())
+                .subject(problem.getSubject())
+                .problemImageName(problem.getProblemImageName())
+                .solutionImageName(problem.getSolutionImageName())
+                .build();
+    }
+
     public Problem toEntity() {
         return Problem.builder()
                 .title(title)
@@ -39,7 +51,7 @@ public class Form {
                 .difficulty(difficulty)
                 .subject(subject)
                 .problemImageName(problemImageName)
-                .problemImageName(solutionImageName)
+                .solutionImageName(solutionImageName)
                 .build();
     }
 }
