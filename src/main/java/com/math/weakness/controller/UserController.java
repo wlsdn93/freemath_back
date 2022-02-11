@@ -1,7 +1,7 @@
 package com.math.weakness.controller;
 
+import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
-import com.math.weakness.dto.ProblemDetail;
 import com.math.weakness.service.ProblemService;
 import com.math.weakness.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{problemId}")
-    public ProblemDetail getProblemDetail(@PathVariable long problemId) {
+    public Form getProblemDetail(@PathVariable Long problemId) {
         return problemService.findById(problemId);
     }
 

@@ -1,6 +1,7 @@
 package com.math.weakness.domain;
 
 
+import com.math.weakness.dto.Form;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Problem {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROBLEM_ID")
     private Long problemId;
 
@@ -64,11 +65,14 @@ public class Problem {
         this.solutionImageName = solutionImageName;
     }
 
-    public Problem update(String title, String answer, Integer difficulty, String subject) {
-        this.title = title;
-        this.answer = answer;
-        this.difficulty = difficulty;
-        this.subject = subject;
+    public Problem update(Form form) {
+        this.title = form.getTitle();
+        this.answerType = form.getAnswerType();
+        this.answer = form.getAnswer();
+        this.difficulty = form.getDifficulty();
+        this.subject = form.getSubject();
+        this.problemImageName = form.getProblemImageName();
+        this.solutionImageName = form.getSolutionImageName();
         this.modifiedDate = LocalDateTime.now();
         return this;
     }

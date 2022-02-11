@@ -77,7 +77,7 @@ class ProblemServiceTest {
     void testSampleAdd() {
         int[] difficulties = {2, 3, 4};
         String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 1L ; i <= 1000 ; i++) {
+        for( long i = 1L ; i <= 500 ; i++) {
             String subject = subjects[new Random().nextInt(subjects.length)];
             //Given
             Form form = Form.builder()
@@ -90,21 +90,6 @@ class ProblemServiceTest {
 
             //When
             problemService.addProblem(form);
-        }
-    }
-    @Test
-    @Rollback(value = false)
-    void testSampleUpdate() {
-        String[] subjects = {"CommonMath1", "CommonMath2", "Calculus", "ProbabilityAndStatistic", "GeometryAndVector"};
-        for( long i = 1L ; i <= 1000 ; i++) {
-            //Given
-            Long problemId = i;
-            try {
-                Problem problem = problemRepository.findById(problemId).orElseThrow(Exception::new);
-                String subject = subjects[new Random().nextInt(subjects.length)];
-                problem.update(problem.getTitle(), problem.getAnswer(), problem.getDifficulty(), subject);
-            } catch (Exception e) {
-            }
         }
     }
 
