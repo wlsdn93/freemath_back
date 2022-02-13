@@ -4,6 +4,7 @@ import com.math.weakness.dto.Form;
 import com.math.weakness.dto.PageResponse;
 import com.math.weakness.service.ProblemService;
 import com.math.weakness.service.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,12 +25,23 @@ public class UserController {
             @RequestParam(required = false) Integer difficulty,
             @RequestParam(required = false) String subject,
             @RequestParam(required = false) Boolean status,
-            @RequestParam(required = false) String accessToken,
+            @RequestParam String accessToken,
             @PageableDefault Pageable pageable) {
         return problemService.showAllProblemsForUser(
                 accessToken, pageable, difficulty, subject, status
         );
     }
+
+    @GetMapping("/list")
+    public List<Long> getProblemIdList(
+            @RequestParam(required = false) Integer difficulty,
+            @RequestParam(required = false) String subject,
+            @RequestParam(required = false) Boolean status,
+            @RequestParam String accessToken) {
+        return problemService.getProblemIdList(accessToken, difficulty, subject, status);
+    }
+
+
 
     @GetMapping("/{problemId}")
     public Form getProblemDetail(@PathVariable Long problemId) {
