@@ -27,14 +27,15 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ProblemShow> findByDifficultyAndStatusAndId(Long id, Pageable pageable, Integer difficulty, Boolean status, String subject) {
+    public Page<ProblemShow> getPageForUser(Long id, Pageable pageable, Integer difficulty, Boolean status, String subject) {
         Conditions conditions = Conditions.of(id, pageable, difficulty, status, subject);
         List<ProblemShow> content = this.query(conditions).fetch();
         return PageableExecutionUtils.getPage(content, pageable, this.query(conditions)::fetchCount);
     }
 
     @Override
-    public Page<ProblemShow> findByDifficultyAndStatus(Pageable pageable, Integer difficulty, Boolean status, String subject) {
+    @Transactional(readOnly = true)
+    public Page<ProblemShow> getPageForGuest(Pageable pageable, Integer difficulty, Boolean status, String subject) {
         List<ProblemShow> queryResult = jpaQueryFactory
                 .select(Projections.fields(ProblemShow.class,
                         problem.problemId,
@@ -61,6 +62,28 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
                 .orderBy(problem.problemId.desc());
 
         return PageableExecutionUtils.getPage(queryResult, pageable, count::fetchCount);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> problemIdListForUser(Long id, Integer difficulty, Boolean status, String subject) {
+        return jpaQueryFactory.select(problem.problemId)
+                .from(problem)
+                .leftJoin(userProblem)
+                .where(this.isEqProblem(difficulty),
+                        this.isEqProblem(subject),
+                        this.isEqUserProblem(status))
+                .on(this.isEqProblemAndUserProblemId().and(this.isEqUserId(id)))
+                .fetch();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> problemIdListForGuest(Integer difficulty, Boolean status, String subject) {
+        return jpaQueryFactory.select(problem.problemId)
+                .from(problem)
+                .where(this.isEqProblem(difficulty), this.isEqProblem(subject))
+                .fetch();
     }
 
     private JPAQuery<ProblemShow> query(Conditions conditions) {
@@ -95,7 +118,7 @@ public class CustomProblemRepositoryImpl implements CustomProblemRepository {
     }
 
     private BooleanExpression isEqProblem(String subject) {
-        return subject.isBlank() ? null : problem.subject.eq(subject);
+        return subject.isBlank()? null : problem.subject.eq(subject);
     }
 
     private BooleanExpression isEqUserProblem(Boolean status) {
