@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,15 @@ public class ProblemService {
     private String fileDir;
 
     @Transactional(readOnly = true)
+    public List<Long> getProblemIdList(String accessToken, Integer difficulty, String subject, Boolean status) {
+        if (accessToken.equals("guest")) {
+            return problemRepository.problemIdListForGuest(difficulty, status, subject);
+        }
+        Long id = this.getUserId(accessToken);
+        return problemRepository.problemIdListForUser(id, difficulty, status, subject);
+    }
+
+    @Transactional(readOnly = true)
     public PageResponse showAllProblemsForUser(
             String accessToken,
             Pageable pageable,
@@ -48,11 +58,11 @@ public class ProblemService {
     ) {
         if (accessToken.equals("guest")) {
             return new PageResponse(
-                    problemRepository.findByDifficultyAndStatus(pageable, difficulty, status, subject));
+                    problemRepository.getPageForGuest(pageable, difficulty, status, subject));
         }
         Long id = this.getUserId(accessToken);
         return new PageResponse(problemRepository
-                .findByDifficultyAndStatusAndId(id, pageable, difficulty, status, subject));
+                .getPageForUser(id, pageable, difficulty, status, subject));
     }
 
     public Resource getProblemImage(Long problemId) {
@@ -109,7 +119,6 @@ public class ProblemService {
                 .orElseThrow();
         return Form.from(foundProblem);
     }
-
 
     private void storeImage(Form formData) {
         String[] problemString = formData.getProblemImage().split(",");
