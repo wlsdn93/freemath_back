@@ -28,4 +28,4 @@ logging:
             sql: DEBUG #show parameter binding
 
 file:
-  dir: ../back_data/images/
+  dir: /back_data/images/
