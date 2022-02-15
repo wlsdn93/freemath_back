@@ -30,7 +30,7 @@ public class OAuthService {
     private final AuthenticationStateRepository stateRepository;
     private final UserRepository userRepository;
     private JSONObject tokenResponse;
-    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://3.39.4.23/problems";
+    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://freemath.online/problems";
     private String ERROR_CODE;
     @Value("${oauth2.client.naver.client-id}")
     private String NAVER_CLIENT_ID;
