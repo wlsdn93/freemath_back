@@ -9,4 +9,4 @@ chmod +x ./gradlew && chmod +x ./deploy.sh
 
 ./gradlew build
 
-nohup java -jar ./build/libs/weakness.jar &
+nohup java -jar ./build/libs/weakness.jar
