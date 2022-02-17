@@ -26,8 +26,8 @@ public class AdminController {
         return "/";
     }
 
-    @GetMapping("/update/{problemId}")
-    public String getProblemForm(@ModelAttribute Form formData, @PathVariable Long problemId) {
+    @PostMapping("/update/{problemId}")
+    public String updateProblem(@ModelAttribute Form formData, @PathVariable Long problemId) {
         problemService.updateProblem(formData, problemId);
         return "/";
     }
