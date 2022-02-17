@@ -107,7 +107,11 @@ public class ProblemService {
     public void updateProblem(Form formData, Long problemId) {
         Problem problem = problemRepository.findById(problemId).get();
         problem.update(formData);
-        this.storeImage(formData);
+        try {
+            this.storeImage(formData);
+        } catch (Exception e) {
+            log.error("fail to store image", e);
+        }
     }
 
     public void deleteProblem(Long id) {
