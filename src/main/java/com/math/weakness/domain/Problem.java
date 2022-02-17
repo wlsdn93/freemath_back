@@ -65,7 +65,7 @@ public class Problem {
         this.solutionImageName = solutionImageName;
     }
 
-    public Problem update(Form form) {
+    public void update(Form form) {
         this.title = form.getTitle();
         this.answerType = form.getAnswerType();
         this.answer = form.getAnswer();
@@ -74,6 +74,5 @@ public class Problem {
         this.problemImageName = form.getProblemImageName();
         this.solutionImageName = form.getSolutionImageName();
         this.modifiedDate = LocalDateTime.now();
-        return this;
     }
 }
