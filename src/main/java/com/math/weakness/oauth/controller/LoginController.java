@@ -28,7 +28,7 @@ public class LoginController {
 
     @GetMapping
     private ResponseEntity<String> oAuthLogin(@RequestParam String code,
-            @RequestParam String state) {
+            @RequestParam String state) throws Exception {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json; charset=utf-8");
 
