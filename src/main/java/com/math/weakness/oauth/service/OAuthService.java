@@ -29,6 +29,8 @@ public class OAuthService {
     private final JwtService jwtService;
     private final AuthenticationStateRepository stateRepository;
     private final UserRepository userRepository;
+    private final EmailEncryptionService emailEncryptionService;
+
     private JSONObject tokenResponse;
     private final String LOGIN_SUCCESS_REDIRECT_URL = "http://freemath.online/problems";
     private String ERROR_CODE;
@@ -58,7 +60,7 @@ public class OAuthService {
         return alphanumericState;
     }
 
-    public Map<String, String> oAuthLogin(String code, String state) {
+    public Map<String, String> oAuthLogin(String code, String state) throws Exception {
 
         stateRepository.deleteByValidTimeLessThan(LocalDateTime.now());
         log.info("delete expired authenticationState has called");
@@ -80,19 +82,21 @@ public class OAuthService {
         return response;
     }
 
-    private String getJwt(Map<String, String> userInfo) {
+    private String getJwt(Map<String, String> userInfo) throws Exception {
         User user = this.saveOrUpdate(userInfo);
         return jwtService.generateJwt(user.getName(), user.getEmail(), user.getRole());
     }
 
-    private User saveOrUpdate(Map<String, String> userInfo) {
+    private User saveOrUpdate(Map<String, String> userInfo) throws Exception {
+        String email = userInfo.get("email");
+        String encryptedEmail = emailEncryptionService.encryptSHA256(email);
         try {
-            return userRepository.findByEmail(userInfo.get("email"))
+            return userRepository.findByEmail(encryptedEmail)
                     .orElseThrow(NoSuchElementException::new);
         } catch (NoSuchElementException e) {
             return userRepository.save(User.builder()
                     .name(userInfo.get("name"))
-                    .email(userInfo.get("email"))
+                    .email(encryptedEmail)
                     .role(Role.STUDENT)
                     .platform(Platform.NAVER)
                     .build());
