@@ -21,21 +21,18 @@ public class AdminController {
     private final ProblemService problemService;
 
     @PostMapping("/upload")
-    public String uploadProblem(@ModelAttribute Form formData) {
+    public void uploadProblem(@ModelAttribute Form formData) {
         problemService.addProblem(formData);
-        return "/";
     }
 
     @PostMapping("/update/{problemId}")
-    public String updateProblem(@ModelAttribute Form formData, @PathVariable Long problemId) {
+    public void updateProblem(@ModelAttribute Form formData, @PathVariable Long problemId) {
         problemService.updateProblem(formData, problemId);
-        return "/";
     }
 
     @DeleteMapping("/delete/{problemId}")
-    public String deleteProblem(@PathVariable long problemId) {
+    public void deleteProblem(@PathVariable long problemId) {
         problemService.deleteProblem(problemId);
-        return "/";
     }
 
 
