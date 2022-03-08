@@ -32,7 +32,7 @@ public class OAuthService {
     private final EmailEncryptionService emailEncryptionService;
 
     private JSONObject tokenResponse;
-    private final String LOGIN_SUCCESS_REDIRECT_URL = "http://freemath.online/problems";
+    private final String LOGIN_SUCCESS_REDIRECT_URL = "https://freemath.online/problems";
     private String ERROR_CODE;
     @Value("${oauth2.client.naver.client-id}")
     private String NAVER_CLIENT_ID;
@@ -71,7 +71,7 @@ public class OAuthService {
             response.put("redirectUri", LOGIN_SUCCESS_REDIRECT_URL);
             response.put("errorCode", ERROR_CODE);
         }
-        Map<String, String> userInfo = getUserInfo(code);
+        Map<String, String> userInfo = this.getUserInfo(code);
         String jwt = getJwt(userInfo);
         Map<String, String> response = new HashMap<>();
         response.put("jwt", jwt);
@@ -113,7 +113,7 @@ public class OAuthService {
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
-        Map<String, String> profile = (Map)userInfoResponse.get("response");
+        Map<String, String> profile = (Map<String, String>)userInfoResponse.get("response");
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("email", profile.get("email").toString());
         userInfo.put("name", profile.get("name").toString());
