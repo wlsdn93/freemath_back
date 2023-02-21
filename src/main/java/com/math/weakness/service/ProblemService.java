@@ -40,7 +40,8 @@ public class ProblemService {
     private String fileDir;
 
     @Transactional(readOnly = true)
-    public List<Long> getProblemIdList(String accessToken, Integer difficulty, String subject, Boolean status) {
+    public List<Long> getProblemIdList(String accessToken, Integer difficulty, String subject,
+        Boolean status) {
         if (accessToken.equals("guest")) {
             return problemRepository.problemIdListForGuest(difficulty, status, subject);
         }
@@ -50,19 +51,19 @@ public class ProblemService {
 
     @Transactional(readOnly = true)
     public PageResponse showAllProblemsForUser(
-            String accessToken,
-            Pageable pageable,
-            Integer difficulty,
-            String subject,
-            Boolean status
+        String accessToken,
+        Pageable pageable,
+        Integer difficulty,
+        String subject,
+        Boolean status
     ) {
         if (accessToken.equals("guest")) {
             return new PageResponse(
-                    problemRepository.getPageForGuest(pageable, difficulty, status, subject));
+                problemRepository.getPageForGuest(pageable, difficulty, status, subject));
         }
         Long id = this.getUserId(accessToken);
         return new PageResponse(problemRepository
-                .getPageForUser(id, pageable, difficulty, status, subject));
+            .getPageForUser(id, pageable, difficulty, status, subject));
     }
 
     public Resource getProblemImage(Long problemId) {
@@ -82,26 +83,22 @@ public class ProblemService {
         User user = userService.findById(this.getUserId(accessToken));
         boolean isCorrect = problem.getAnswer().equals(answer);
         UserProblemId userProblemId = new UserProblemId(this.getUserId(accessToken), problemId);
-        try {
-            UserProblem userProblem = userProblemRepository
-                                        .findByUserProblemId(userProblemId)
-                                        .orElseThrow(NullPointerException::new);
-            userProblem.update(isCorrect, answer);
-        } catch (NullPointerException e) {
-            userProblemRepository.save(UserProblem.builder()
+        userProblemRepository.findByUserProblemId(userProblemId)
+            .ifPresentOrElse(
+                isNotEmpty -> isNotEmpty.update(isCorrect, answer),
+                () -> userProblemRepository.save(UserProblem.builder()
                     .user(user)
                     .problem(problem)
                     .status(isCorrect)
                     .submittedAnswer(answer)
-                    .build());
-        }
+                    .build()));
         return isCorrect;
     }
 
     public Long addProblem(Form formData) {
         this.storeImage(formData);
         return problemRepository.save(formData.toEntity())
-                .getProblemId();
+            .getProblemId();
     }
 
     public void updateProblem(Form formData, Long problemId) {
@@ -120,7 +117,7 @@ public class ProblemService {
 
     public Form findById(Long id) {
         Problem foundProblem = problemRepository.findById(id)
-                .orElseThrow();
+            .orElseThrow();
         return Form.from(foundProblem);
     }
 
@@ -133,12 +130,14 @@ public class ProblemService {
         byte[] problemByte = Base64.getDecoder().decode(problemString[1]);
         byte[] solutionByte = Base64.getDecoder().decode(solutionString[1]);
 
-        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(problemImagePath))) {
+        try (OutputStream outputStream = new BufferedOutputStream(
+            new FileOutputStream(problemImagePath))) {
             outputStream.write(problemByte);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(solutionImagePath))) {
+        try (OutputStream outputStream = new BufferedOutputStream(
+            new FileOutputStream(solutionImagePath))) {
             outputStream.write(solutionByte);
         } catch (IOException e) {
             e.printStackTrace();
