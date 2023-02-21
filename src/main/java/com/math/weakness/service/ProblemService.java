@@ -40,8 +40,7 @@ public class ProblemService {
     private String fileDir;
 
     @Transactional(readOnly = true)
-    public List<Long> getProblemIdList(String accessToken, Integer difficulty, String subject,
-        Boolean status) {
+    public List<Long> getProblemIdList(String accessToken, Integer difficulty, String subject, Boolean status) {
         if (accessToken.equals("guest")) {
             return problemRepository.problemIdListForGuest(difficulty, status, subject);
         }
@@ -83,24 +82,27 @@ public class ProblemService {
         User user = userService.findById(this.getUserId(accessToken));
         boolean isCorrect = problem.getAnswer().equals(answer);
         UserProblemId userProblemId = new UserProblemId(this.getUserId(accessToken), problemId);
-        userProblemRepository.findByUserProblemId(userProblemId)
-            .ifPresentOrElse(
-                isNotEmpty -> isNotEmpty.update(isCorrect, answer),
-                () -> userProblemRepository.save(UserProblem.builder()
+        try {
+            UserProblem userProblem = userProblemRepository
+                                        .findByUserProblemId(userProblemId)
+                                        .orElseThrow(NullPointerException::new);
+            userProblem.update(isCorrect, answer);
+        } catch (NullPointerException e) {
+            userProblemRepository.save(UserProblem.builder()
                     .user(user)
                     .problem(problem)
                     .status(isCorrect)
                     .submittedAnswer(answer)
-                    .build()));
+                    .build());
+        }
         return isCorrect;
     }
 
     public Long addProblem(Form formData) {
         this.storeImage(formData);
         return problemRepository.save(formData.toEntity())
-            .getProblemId();
+                .getProblemId();
     }
-
     public void updateProblem(Form formData, Long problemId) {
         Problem problem = problemRepository.findById(problemId).get();
         problem.update(formData);
@@ -111,13 +113,14 @@ public class ProblemService {
         }
     }
 
+
     public void deleteProblem(Long id) {
         problemRepository.deleteById(id);
     }
 
     public Form findById(Long id) {
         Problem foundProblem = problemRepository.findById(id)
-            .orElseThrow();
+                .orElseThrow();
         return Form.from(foundProblem);
     }
 
@@ -130,14 +133,7 @@ public class ProblemService {
         byte[] problemByte = Base64.getDecoder().decode(problemString[1]);
         byte[] solutionByte = Base64.getDecoder().decode(solutionString[1]);
 
-        try (OutputStream outputStream = new BufferedOutputStream(
-            new FileOutputStream(problemImagePath))) {
-            outputStream.write(problemByte);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (OutputStream outputStream = new BufferedOutputStream(
-            new FileOutputStream(solutionImagePath))) {
+        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(problemImagePath))) {
             outputStream.write(solutionByte);
         } catch (IOException e) {
             e.printStackTrace();
