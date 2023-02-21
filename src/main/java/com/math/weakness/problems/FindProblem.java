@@ -20,6 +20,7 @@ public interface FindProblem {
             if (request.isGuest()) {
                 return problemRepository.findId(request.difficulty, request.status, request.subject);
             }
+
             Long id = problemRepository.findUserId(request.accessToken);
             return problemRepository.findId(id, request.difficulty, request.status, request.subject);
         }
