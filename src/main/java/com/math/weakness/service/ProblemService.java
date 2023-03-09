@@ -50,19 +50,19 @@ public class ProblemService {
 
     @Transactional(readOnly = true)
     public PageResponse showAllProblemsForUser(
-            String accessToken,
-            Pageable pageable,
-            Integer difficulty,
-            String subject,
-            Boolean status
+        String accessToken,
+        Pageable pageable,
+        Integer difficulty,
+        String subject,
+        Boolean status
     ) {
         if (accessToken.equals("guest")) {
             return new PageResponse(
-                    problemRepository.getPageForGuest(pageable, difficulty, status, subject));
+                problemRepository.getPageForGuest(pageable, difficulty, status, subject));
         }
         Long id = this.getUserId(accessToken);
         return new PageResponse(problemRepository
-                .getPageForUser(id, pageable, difficulty, status, subject));
+            .getPageForUser(id, pageable, difficulty, status, subject));
     }
 
     public Resource getProblemImage(Long problemId) {
@@ -103,7 +103,6 @@ public class ProblemService {
         return problemRepository.save(formData.toEntity())
                 .getProblemId();
     }
-
     public void updateProblem(Form formData, Long problemId) {
         Problem problem = problemRepository.findById(problemId).get();
         problem.update(formData);
@@ -113,6 +112,7 @@ public class ProblemService {
             log.error("fail to store image", e);
         }
     }
+
 
     public void deleteProblem(Long id) {
         problemRepository.deleteById(id);
@@ -134,11 +134,6 @@ public class ProblemService {
         byte[] solutionByte = Base64.getDecoder().decode(solutionString[1]);
 
         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(problemImagePath))) {
-            outputStream.write(problemByte);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(solutionImagePath))) {
             outputStream.write(solutionByte);
         } catch (IOException e) {
             e.printStackTrace();
