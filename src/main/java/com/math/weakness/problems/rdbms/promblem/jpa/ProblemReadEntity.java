@@ -1,4 +1,4 @@
-package com.math.weakness.problems.rdbms.jpa;
+package com.math.weakness.problems.rdbms.promblem.jpa;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -9,19 +9,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.math.weakness.problems.domain.Problem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Immutable;
 
 @Entity
 @Getter
-@DynamicInsert
-@DynamicUpdate
+@Immutable
 @Table(name = "PROBLEM")
 @NoArgsConstructor(access = PROTECTED)
-public class ProblemWriteEntity {
+public class ProblemReadEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,5 +53,9 @@ public class ProblemWriteEntity {
 
     @Column(name = "MODIFIED_DATE")
     private LocalDateTime modifiedDate;
+
+    public Problem toDomain() {
+        return new Problem(title,problemImageName,solutionImageName,answer,difficulty);
+    }
 
 }

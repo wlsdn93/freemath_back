@@ -1,13 +1,14 @@
-package com.math.weakness.problems.rdbms;
+package com.math.weakness.problems.rdbms.promblem;
 
-import com.math.weakness.problems.rdbms.jpa.ProblemJpaReadRepository;
-import com.math.weakness.problems.rdbms.jpa.ProblemReadEntity;
+import com.math.weakness.problems.domain.Problem;
+import com.math.weakness.problems.rdbms.promblem.jpa.ProblemJpaReadRepository;
+import com.math.weakness.problems.rdbms.promblem.jpa.ProblemReadEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-public interface ProblemRdbmsRepository {
+public interface ProblemRepository {
     List<Long> findId(Integer difficulty, Boolean status, String subject);
 
     Long findUserId(String accessToken);
@@ -16,7 +17,7 @@ public interface ProblemRdbmsRepository {
 
     @Repository
     @RequiredArgsConstructor
-    class ProblemRdbmsRepositoryImpl implements ProblemRdbmsRepository {
+    class ProblemRdbmsRepository implements ProblemRepository {
         private final ProblemJpaReadRepository problemJpaReadRepository;
 
         @Override

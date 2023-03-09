@@ -1,4 +1,4 @@
-package com.math.weakness.problems.rdbms.jpa;
+package com.math.weakness.problems.rdbms.promblem.jpa;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -11,14 +11,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Getter
-@Immutable
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "PROBLEM")
 @NoArgsConstructor(access = PROTECTED)
-public class ProblemReadEntity {
+public class ProblemWriteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

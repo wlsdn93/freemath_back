@@ -1,6 +1,6 @@
 package com.math.weakness.problems;
 
-import com.math.weakness.problems.rdbms.ProblemRdbmsRepository;
+import com.math.weakness.problems.rdbms.promblem.ProblemRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ public interface FindProblem {
     @Service
     @RequiredArgsConstructor
     class FindProblemUsecase implements FindProblem {
-        private final ProblemRdbmsRepository problemRepository;
+        private final ProblemRepository problemRepository;
 
         @Override
         @Transactional(readOnly = true)

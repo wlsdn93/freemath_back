@@ -1,4 +1,4 @@
-package com.math.weakness.problems.rdbms.jpa;
+package com.math.weakness.problems.rdbms.promblem.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
